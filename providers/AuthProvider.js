@@ -31,19 +31,22 @@ function AuthProvider({ children }) {
     }
   }
 
-  async function login(username, password) {
+  async function login(email, password) {
     setLoading(true);
-    const _user = await authService(username, password)
+    const _user = await authService(email, password)
 
     setUser(_user)
     if (_user) {
       await AsyncStorage.setItem("@authData", JSON.stringify(_user))
       console.log({ _user })
     }
+
     setLoading(false)
+
   }
-  async function logout(username, password) {
-    setLoading(true);
+
+  async function logout(email, password) {
+    setLoading(true)
     setUser(undefined)
     setLoading(false)
   }

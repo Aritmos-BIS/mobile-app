@@ -1,14 +1,17 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from 'react-native';
+import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import useAuth from "../hooks/useAuth";
+import icon from '../assets/AritmosLogo.png';
 
 export function LoginPage() {
-  const [mail, setMail] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isValidEmail, setIsValidEmail] = useState<boolean | null>(null);
 
-  const handleLogin = () => {
-    // Aquí iría la lógica para manejar el inicio de sesión
-    console.log(mail, password);
+  const { login, loading } = useAuth();
+
+  const handleLogin = async () => {
+    await login(email, password);
   };
 
   const validateEmail = (text: string) => {
@@ -17,26 +20,32 @@ export function LoginPage() {
   };
 
   const handleChangeMail = (text: string) => {
-    setMail(text);
+    setEmail(text);
     validateEmail(text);
   };
+
+  if (loading) {
+    return (
+      <View style={styles.maincontainer}>
+        <ActivityIndicator />
+      </View>
+    );
+  }
 
   return (
     <View style={styles.maincontainer}>
       <View style={styles.logincontainer}>
         <Text style={styles.loginText}>Login</Text>
-        <Image style={styles.imagecontainer} source={require('../assets/AritmosLogo.png')} />
+        <Image style={styles.imagecontainer} source={icon} />
         <TextInput
           style={[styles.input, isValidEmail == null ? styles.input : isValidEmail ? styles.inputValid : styles.inputInvalid]}
           placeholder="E-mail"
-          value={mail}
           onChangeText={handleChangeMail}
         />
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
-          value={password}
-          secureTextEntry
+          secureTextEntry={true}
           onChangeText={setPassword}
         />
         <TouchableOpacity style={styles.buttonStyle} onPress={handleLogin}>
@@ -63,7 +72,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 20,
     shadowColor: '#C77DFF',
-    shadowOffset: { width: 0, height: 4, },
+    shadowOffset: { width: 0, height: 4 },
     shadowRadius: 6,
     shadowOpacity: 0.75,
     elevation: 10,

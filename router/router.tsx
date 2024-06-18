@@ -1,24 +1,18 @@
-import React from 'react';
 import { NavigationContainer } from "@react-navigation/native";
-import { StyleSheet, Text, View } from "react-native";
+import { View, Text } from "react-native";
+import AuthStack from "./AuthStack";
 import AppStack from "./AppStack";
-import AuthStack from './AuthStack';
-
+import useAuth from "../hooks/useAuth";
 
 function Router() {
+  // const auth = false
+  const demo = useAuth();
 
   return (
-    <NavigationContainer style={styles.container}>
-      <AppStack />
+    <NavigationContainer>
+      {demo.user != undefined ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    backgroundColor: "#7B2CBF"
-  }
-});
 
 export default Router;
