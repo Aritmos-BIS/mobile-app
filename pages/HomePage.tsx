@@ -1,6 +1,5 @@
-
 import React from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 
 const Home = () => {
   return (
@@ -8,10 +7,15 @@ const Home = () => {
       <View style={styles.container}>
         <Text style={styles.title}>Torneos Activos</Text>
         <View style={styles.infoContainer}>
-          <Text style={styles.contentText}>texto</Text>
-          <Text style={styles.contentText}>texto</Text>
-          <Text style={styles.contentText}>texto</Text>
+          <Text style={styles.label}>Grupo: 301</Text>
+          <Text style={styles.label}>Prof: Raul Muñiz</Text>
         </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.label}>Participantes: 10</Text>
+        </View>
+        <TouchableOpacity style={styles.buttonStyle} onPress={() => alert('Entrar')}>
+          <Text style={styles.buttonText}>Entrar</Text>
+        </TouchableOpacity>
       </View>
     </View>
   );
@@ -26,7 +30,6 @@ const styles = StyleSheet.create({
     padding: 20
   },
   container: {
-    flex: 1,
     backgroundColor: '#7B2CBF',
     padding: 20,
     width: 300,
@@ -38,7 +41,7 @@ const styles = StyleSheet.create({
     elevation: 5,
   },
   infoContainer: {
-    margin: 20,
+    marginVertical: 10,
   },
   title: {
     fontSize: 36,
@@ -47,17 +50,24 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     marginBottom: 20,
   },
-  content: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  contentText: {
-    fontSize: 18,
+  label: {
+    fontSize: 24,
     textAlign: 'center',
-    color: '#fff'
+    color: '#fff',
+    fontWeight: 'bold'
+  },
+  buttonStyle: {
+    backgroundColor: '#E0AAFF',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  buttonText: {
+    color: 'white',
+    textAlign: 'center',
+    fontSize: 16,
+    fontWeight: 'bold'
   },
 });
 
 export default Home;
-
