@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from 'react-native';
 
-export function Login() {
+export function LoginPage() {
   const [mail, setMail] = useState('');
   const [password, setPassword] = useState('');
   const [isValidEmail, setIsValidEmail] = useState<boolean | null>(null);
@@ -27,7 +27,7 @@ export function Login() {
         <Text style={styles.loginText}>Login</Text>
         <Image style={styles.imagecontainer} source={require('../assets/AritmosLogo.png')} />
         <TextInput
-          style={[styles.input, isValidEmail==null ? styles.input : isValidEmail ? styles.inputValid : styles.inputInvalid]}
+          style={[styles.input, isValidEmail == null ? styles.input : isValidEmail ? styles.inputValid : styles.inputInvalid]}
           placeholder="E-mail"
           value={mail}
           onChangeText={handleChangeMail}
@@ -63,7 +63,7 @@ const styles = StyleSheet.create({
     borderRadius: 20,
     padding: 20,
     shadowColor: '#C77DFF',
-    shadowOffset: {width: 0, height: 4,},
+    shadowOffset: { width: 0, height: 4, },
     shadowRadius: 6,
     shadowOpacity: 0.75,
     elevation: 10,
@@ -107,3 +107,5 @@ const styles = StyleSheet.create({
     textAlign: 'center',
   },
 });
+
+export default LoginPage;
