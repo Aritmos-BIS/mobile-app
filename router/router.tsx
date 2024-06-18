@@ -17,7 +17,7 @@ function Router() {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: "#708090"
+    backgroundColor: "#7B2CBF"
   }
 });
 
