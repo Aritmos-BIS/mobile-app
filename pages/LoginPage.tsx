@@ -62,6 +62,11 @@ const styles = StyleSheet.create({
     height: 450,
     borderRadius: 20,
     padding: 20,
+    shadowColor: '#C77DFF',
+    shadowOffset: { width: 0, height: 4, },
+    shadowRadius: 6,
+    shadowOpacity: 0.75,
+    elevation: 10,
   },
   loginText: {
     fontSize: 35,
