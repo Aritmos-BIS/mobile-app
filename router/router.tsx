@@ -9,7 +9,7 @@ function Router() {
 
   return (
     <NavigationContainer style={styles.container}>
-      <AuthStack />
+      <AppStack />
     </NavigationContainer>
   );
 }
