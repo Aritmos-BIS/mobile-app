@@ -1,13 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
-import useAuth from '../hooks/useAuth';
+import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from 'react-native';
+import useAuth from "../hooks/useAuth";
+
 
 export function LoginPage() {
-  const [email, setMail] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isValidEmail, setIsValidEmail] = useState<boolean | null>(null);
+
   const { login, loading } = useAuth();
-  
+
+
   const handleLogin = async () => {
     await login(email, password);
   };
@@ -18,7 +21,7 @@ export function LoginPage() {
   };
 
   const handleChangeMail = (text: string) => {
-    setMail(text);
+    setEmail(text);
     validateEmail(text);
   };
 

@@ -1,28 +1,46 @@
-import React from 'react';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
+import { Button } from "react-native";
+import useAuth from "../hooks/useAuth";
 import HomePage from "../pages/HomePage";
+import ProfilePage from "../pages/ProfilePage";
 
 const Stack = createNativeStackNavigator();
-
 function AppStack() {
+
   return (
-    <Stack.Navigator
-      screenOptions={{
-        headerStyle: {
-          backgroundColor: '#5A189A',
-        },
-        headerTintColor: '#fff',
-        headerTitleStyle: {
-          fontWeight: 'bold',
-        },
-      }}
-    >
+    <Stack.Navigator>
       <Stack.Screen
+        options={({ navigation }) => ({
+          headerStyle: {
+            backgroundColor: '#5A189A',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerRight: () => (
+            <Button
+              title="Perfil"
+              onPress={() => navigation.navigate('Profile')}
+            />
+          ),
+        })}
         name="Home"
         component={HomePage}
-        options={{ title: 'Inicio' }}
       />
-      {/* Add more screens here if needed */}
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            backgroundColor: '#5A189A',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+        name="Profile"
+        component={ProfilePage}
+      />
     </Stack.Navigator>
   );
 }
