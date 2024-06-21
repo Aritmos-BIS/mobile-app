@@ -11,7 +11,7 @@ async function demoService() {
 
     const { token } = JSON.parse(authDataSerialize)
 
-    const response = await fetch('http://aritmos.vercel.app/api/students', {
+    const response = await fetch('https://aritmos-salvador511s-projects.vercel.app/api/students', {
       method: 'GET',
       headers: {
         Authorization: `Bearer ${token}`,

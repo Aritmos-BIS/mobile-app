@@ -1,11 +1,10 @@
-import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
-import Router from './router/router';
-import React from 'react';
+import { StatusBar } from "expo-status-bar";
+import { StyleSheet, Text, View } from "react-native";
+import Router from "./router/router";
+import { AuthProvider } from "./providers/AuthProvider";
 
 export default function App() {
-  return (
-    <Router />
-  );
+  return ( <AuthProvider><Router /></AuthProvider>
+   
+  )
 }
-
