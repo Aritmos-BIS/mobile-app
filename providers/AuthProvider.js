@@ -45,7 +45,7 @@ function AuthProvider({ children }) {
 
   }
 
-  async function logout(email, password) {
+  async function logout() {
     setLoading(true);
 
     setUser(undefined)

@@ -1,10 +1,39 @@
-import React, { useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity } from 'react-native';
+import React, { useEffect, useState } from 'react';
+import { StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
+import demoService from '../services/demoService'
+import { Student } from '../types/user.type'
 import useAuth from '../hooks/useAuth';
 
-export function ProfilePage({route}) {
-  const { data } = route.params;
-  const logout = useAuth();
+export function ProfilePage() {
+  const {logout, loading} = useAuth();
+  const [_loading, setLoading] = useState(true);
+  const [data,  setData] = useState< Student | undefined>(undefined);
+
+  useEffect(() => {
+      handleLoad()
+  }, [])
+  useEffect(() => {
+      console.log({data})
+  }, [data])
+
+  const handleLogOut = () => {
+    logout()
+  } 
+
+  const handleLoad = async () => {
+      setLoading(true)
+      const _data = await demoService()
+      setData(_data)
+      setLoading(false)
+  };
+
+  if(loading || _loading){
+      return (
+          <View style={styles.maincontainer}>
+              <ActivityIndicator/>
+          </View>
+      );
+  }
 
     return (
         <View style={styles.maincontainer}>
@@ -14,10 +43,10 @@ export function ProfilePage({route}) {
             </View>
             <View style={styles.infoContainer}>
               <Text style={styles.textInfo}>Name: {data?.name}</Text>
-              <Text style={styles.textInfo}>Group: {data?.group}</Text>
+              <Text style={styles.textInfo}>Group: {data?.group.name}</Text>
             </View>
           </View>
-          <TouchableOpacity style={styles.logoutBtn} onPress= {logout} >
+          <TouchableOpacity style={styles.logoutBtn} onPress= {handleLogOut} >
             <Text style={styles.logoutText}>Salir</Text>
           </TouchableOpacity>
         </View>
