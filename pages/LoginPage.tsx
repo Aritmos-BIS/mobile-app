@@ -1,14 +1,18 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity } from 'react-native';
+import useAuth from "../hooks/useAuth";
+
 
 export function LoginPage() {
-  const [mail, setMail] = useState('');
+  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isValidEmail, setIsValidEmail] = useState<boolean | null>(null);
 
-  const handleLogin = () => {
-    // Aquí iría la lógica para manejar el inicio de sesión
-    console.log(mail, password);
+  const { login, loading } = useAuth();
+
+
+  const handleLogin = async () => {
+    await login(email, password);
   };
 
   const validateEmail = (text: string) => {
@@ -17,9 +21,11 @@ export function LoginPage() {
   };
 
   const handleChangeMail = (text: string) => {
-    setMail(text);
+    setEmail(text);
     validateEmail(text);
   };
+
+
 
   return (
     <View style={styles.maincontainer}>
@@ -29,7 +35,7 @@ export function LoginPage() {
         <TextInput
           style={[styles.input, isValidEmail == null ? styles.input : isValidEmail ? styles.inputValid : styles.inputInvalid]}
           placeholder="E-mail"
-          value={mail}
+          value={email}
           onChangeText={handleChangeMail}
         />
         <TextInput

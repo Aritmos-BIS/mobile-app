@@ -46,9 +46,12 @@ function AuthProvider({ children }) {
   }
 
   async function logout(email, password) {
-    setLoading(true)
+    setLoading(true);
+
     setUser(undefined)
+
     setLoading(false)
+
   }
 
   return (
