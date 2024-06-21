@@ -1,14 +1,33 @@
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
-import { View, Text, Button } from "react-native";
+import { Button } from "react-native";
 import useAuth from "../hooks/useAuth";
 import HomePage from "../pages/HomePage";
+import ProfilePage from "../pages/ProfilePage";
 
 const Stack = createNativeStackNavigator();
 function AppStack() {
-  const { logout } = useAuth();
 
   return (
     <Stack.Navigator>
+      <Stack.Screen
+        options={({ navigation }) => ({
+          headerStyle: {
+            backgroundColor: '#5A189A',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+          headerRight: () => (
+            <Button
+              title="Perfil"
+              onPress={() => navigation.navigate('Profile')}
+            />
+          ),
+        })}
+        name="Home"
+        component={HomePage}
+      />
       <Stack.Screen
         options={{
           headerStyle: {
@@ -18,11 +37,9 @@ function AppStack() {
           headerTitleStyle: {
             fontWeight: 'bold',
           },
-          headerRight: () => <Button title='log out' onPress={logout} />
-        }
-        }
-        name="Home"
-        component={HomePage}
+        }}
+        name="Profile"
+        component={ProfilePage}
       />
     </Stack.Navigator>
   );
