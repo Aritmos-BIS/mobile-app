@@ -47,6 +47,8 @@ function AuthProvider({ children }) {
 
   async function logout() {
     setLoading(true);
+    
+    await AsyncStorage.removeItem('@authData');
 
     setUser(undefined)
 
