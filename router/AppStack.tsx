@@ -1,12 +1,14 @@
+// router/AppStack.tsx
+import React from 'react';
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { Button } from "react-native";
-import useAuth from "../hooks/useAuth";
 import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
+import TournamentPage from "../pages/TournamentPage";
 
 const Stack = createNativeStackNavigator();
-function AppStack() {
 
+function AppStack() {
   return (
     <Stack.Navigator>
       <Stack.Screen
@@ -40,6 +42,19 @@ function AppStack() {
         }}
         name="Profile"
         component={ProfilePage}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            backgroundColor: '#5A189A',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+        name="Tournament"
+        component={TournamentPage}
       />
     </Stack.Navigator>
   );

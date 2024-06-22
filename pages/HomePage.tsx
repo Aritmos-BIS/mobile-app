@@ -1,7 +1,11 @@
+// pages/HomePage.tsx
 import React from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
+import { useNavigation } from '@react-navigation/native';
+import TournamentPage from './TournamentPage';
 
-const Home = () => {
+const HomePage = ({ navigation }) => {
+
   return (
     <View style={styles.mainContainer}>
       <View style={styles.container}>
@@ -13,7 +17,7 @@ const Home = () => {
         <View style={styles.infoContainer}>
           <Text style={styles.label}>Participantes: 10</Text>
         </View>
-        <TouchableOpacity style={styles.buttonStyle} onPress={() => alert('Entrar')}>
+        <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate("Tournament")}>
           <Text style={styles.buttonText}>Entrar</Text>
         </TouchableOpacity>
       </View>
@@ -27,7 +31,7 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#10002B',
-    padding: 20
+    padding: 20,
   },
   container: {
     backgroundColor: '#7B2CBF',
@@ -54,7 +58,7 @@ const styles = StyleSheet.create({
     fontSize: 24,
     textAlign: 'center',
     color: '#fff',
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
   buttonStyle: {
     backgroundColor: '#E0AAFF',
@@ -66,8 +70,8 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
     fontSize: 16,
-    fontWeight: 'bold'
+    fontWeight: 'bold',
   },
 });
 
-export default Home;
+export default HomePage;

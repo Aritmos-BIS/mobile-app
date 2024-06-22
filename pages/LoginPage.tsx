@@ -25,13 +25,13 @@ export function LoginPage() {
     validateEmail(text);
   };
 
-  if(loading){
+  if (loading) {
     return (
-        <View style={styles.maincontainer}>
-            <ActivityIndicator/>
-        </View>
+      <View style={styles.maincontainer}>
+        <ActivityIndicator />
+      </View>
     );
-}
+  }
 
   return (
     <View style={styles.maincontainer}>

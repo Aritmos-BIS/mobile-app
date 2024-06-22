@@ -5,7 +5,6 @@ import AppStack from "./AppStack";
 import useAuth from "../hooks/useAuth";
 
 function Router() {
-  // const auth = false
   const demo = useAuth();
 
   return (
