@@ -27,26 +27,28 @@ export function LoginPage() {
 
   if (loading) {
     return (
-      <View style={styles.maincontainer}>
+      <View style={styles.mainContainer}>
         <ActivityIndicator />
       </View>
     );
   }
 
   return (
-    <View style={styles.maincontainer}>
-      <View style={styles.logincontainer}>
+    <View style={styles.mainContainer}>
+      <View style={styles.loginContainer}>
         <Text style={styles.loginText}>Login</Text>
-        <Image style={styles.imagecontainer} source={require('../assets/AritmosLogo.png')} />
+        <Image style={styles.imageContainer} source={require('../assets/AritmosLogo.png')} />
         <TextInput
           style={[styles.input, isValidEmail == null ? styles.input : isValidEmail ? styles.inputValid : styles.inputInvalid]}
           placeholder="E-mail"
+          autoCapitalize='none'
           value={email}
           onChangeText={handleChangeMail}
         />
         <TextInput
           style={styles.input}
           placeholder="Contraseña"
+          autoCapitalize='none'
           value={password}
           secureTextEntry
           onChangeText={setPassword}
@@ -60,13 +62,13 @@ export function LoginPage() {
 }
 
 const styles = StyleSheet.create({
-  maincontainer: {
+  mainContainer: {
     flex: 1,
     backgroundColor: '#10002B',
     alignItems: 'center',
     justifyContent: 'center',
   },
-  logincontainer: {
+  loginContainer: {
     backgroundColor: '#7B2CBF',
     alignItems: 'center',
     justifyContent: 'center',
@@ -100,7 +102,7 @@ const styles = StyleSheet.create({
     borderColor: 'red',
     borderWidth: 3,
   },
-  imagecontainer: {
+  imageContainer: {
     alignItems: 'center',
     justifyContent: 'center',
     width: 150,

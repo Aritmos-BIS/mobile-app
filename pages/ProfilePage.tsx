@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
-import { StyleSheet, Text, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
-import demoService from '../services/demoService'
-import { Student } from '../types/user.type'
+import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, ScrollView, Image } from 'react-native';
+import demoService from '../services/demoService';
+import { Student } from '../types/user.type';
 import useAuth from '../hooks/useAuth';
 
 export function ProfilePage() {
@@ -10,86 +10,119 @@ export function ProfilePage() {
   const [data, setData] = useState<Student | undefined>(undefined);
 
   useEffect(() => {
-    handleLoad()
-  }, [])
+    handleLoad();
+  }, []);
+
   useEffect(() => {
-    console.log({ data })
-  }, [data])
+    console.log({ data });
+  }, [data]);
 
   const handleLogOut = () => {
-    logout()
-  }
+    logout();
+  };
 
   const handleLoad = async () => {
-    setLoading(true)
-    const _data = await demoService()
-    setData(_data)
-    setLoading(false)
+    setLoading(true);
+    const _data = await demoService();
+    setData(_data);
+    setLoading(false);
   };
 
   if (loading || _loading) {
     return (
-      <View style={styles.maincontainer}>
+      <View style={styles.loadingContainer}>
         <ActivityIndicator />
       </View>
     );
   }
 
   return (
-    <View style={styles.maincontainer}>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
       <View style={styles.profileContainer}>
         <View style={styles.titleContainer}>
           <Text style={styles.title}>Perfil de {data?.name}</Text>
         </View>
         <View style={styles.infoContainer}>
+          <Image style={styles.imageContainer} source={require('../assets/ProfilePic.png')} />
           <Text style={styles.textInfo}>Name: {data?.name}</Text>
           <Text style={styles.textInfo}>Group: {data?.group.name}</Text>
         </View>
       </View>
-      <TouchableOpacity style={styles.logoutBtn} onPress={handleLogOut} >
-        <Text style={styles.logoutText}>Salir</Text>
+      <View style={styles.statusContainer}>
+        <View style={styles.titleContainer}>
+          <Text style={styles.title}>Stats</Text>
+        </View>
+        <View style={styles.infoContainer}>
+          <Text style={styles.textInfo}>Torneos ganados: 1</Text>
+          <Text style={styles.textInfo}>Victorias: 1</Text>
+          <Text style={styles.textInfo}>Torneos jugados: 1</Text>
+          <Text style={styles.textInfo}>Monstruo favorito:</Text>
+          <Image style={styles.imageContainer} source={require('../assets/axo.png')} />
+        </View>
+      </View>
+      <TouchableOpacity style={styles.logoutBtn} onPress={handleLogOut}>
+        <Text style={styles.logoutText}>Cerrar sesion</Text>
       </TouchableOpacity>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  maincontainer: {
+  loadingContainer: {
     flex: 1,
-    backgroundColor: '#240046',
-    alignItems: 'center',
     justifyContent: 'center',
+    alignItems: 'center',
+  },
+  scrollContainer: {
+    paddingVertical: 20,
+    paddingHorizontal: 10,
+    alignItems: 'center',
+    backgroundColor: '#10002B',
   },
   profileContainer: {
-    width: '70%',
-    height: '70%',
+    width: '100%',
     backgroundColor: '#7B2CBF',
     borderRadius: 15,
+    padding: 20,
+    marginBottom: 20,
   },
   titleContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
+    marginBottom: 10,
   },
   infoContainer: {
-    flex: 2,
-    justifyContent: 'space-evenly',
-    alignItems: 'center',
+    alignItems:'center',
+    marginVertical: 10,
+  },
+  imageContainer: {
+    width: 150,
+    height: 150,
+    padding: 20,
+    margin: 20,
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     color: 'white',
+    textAlign: 'center',
   },
   textInfo: {
     fontSize: 18,
     color: 'white',
+    textAlign: 'center',
+  },
+  statusContainer: {
+    width: '100%',
+    backgroundColor: '#9D4EDD',
+    borderRadius: 15,
+    padding: 20,
+    marginBottom: 20,
   },
   logoutBtn: {
-    width: '50%',
-    height: '10%',
+    width: '100%',
     backgroundColor: 'red',
     borderRadius: 10,
+    padding: 10,
+    alignItems: 'center',
   },
   logoutText: {
     fontSize: 18,
