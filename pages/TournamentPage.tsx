@@ -14,6 +14,9 @@ const TournamentPage = ({ navigation }) => {
         <TouchableOpacity style={styles.buttonStyle} onPress={() => setModalVisible(true)}>
           <Text style={styles.buttonText}>Salir del torneo</Text>
         </TouchableOpacity>
+        <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Control')}>
+          <Text style={styles.buttonText}>Entrar al torneo</Text>
+        </TouchableOpacity>
       </View>
 
       <Modal
@@ -26,7 +29,9 @@ const TournamentPage = ({ navigation }) => {
       >
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
-            <Text style={styles.modalText}>Atención, estás a punto de salir del torneo, ¿estás seguro? No podrás participar en el torneo si te quedas fuera.</Text>
+            <Text style={styles.modalText}>
+              Atención, estás a punto de salir del torneo, ¿estás seguro? No podrás participar en el torneo si te quedas fuera.
+            </Text>
             <TouchableOpacity
               style={styles.closeButton}
               onPress={() => setModalVisible(!modalVisible)}
