@@ -24,7 +24,7 @@ export default function CameraPage() {
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
   const cameraRef = useRef<CameraView>(null);
   const [mediaPermission, requestMediaPermission] = MediaLibrary.usePermissions();
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImage] = useState<CameraCapturedPicture>();
 
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
@@ -88,7 +88,7 @@ export default function CameraPage() {
     });
   }
 
-  async function uploadImageToCloudinaryRaw(base64: string) {
+  async function uploadImageToCloudinaryRaw(base64) {
     const base64Image = "data:image/jpeg;base64," + base64;
     const formData = new FormData();
     const public_id = Crypto.randomUUID();
@@ -116,7 +116,7 @@ export default function CameraPage() {
         .takePictureAsync({ skipProcessing: true, base64: true })
         .then(async (picture) => {
           try {
-            setImage(picture.base64);
+            setImage(picture);
             uploadImageToCloudinaryRaw(picture.base64);
           } catch (error) {
             alert("We couldn't take the picture");
@@ -127,13 +127,13 @@ export default function CameraPage() {
 
   if (image) {
     return (
-      <View>
+      <View style = {styles.containerShowPhoto}>
         <Text style={{ textAlign: "center" }}>
           Image Preview
         </Text>
         <Image
           source={{ uri: image.uri }}
-          style={{ width: 150, height: 150 }}
+          style={{width: 150, height: 150}}
         />
         <Button
           onPress={() => {
@@ -174,11 +174,21 @@ const styles = StyleSheet.create({
   camera: {
     flex: 1,
   },
+  containerShowPhoto: {
+    flex: 1,
+    alignItems: 'center',
+  },
   buttonContainer: {
     flex: 1,
     flexDirection: "row",
     backgroundColor: "transparent",
     margin: 64,
+  },
+  imageContainer: {
+    width: 150,
+    height: 150,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
   button: {
     flex: 1,
