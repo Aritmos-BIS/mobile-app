@@ -53,6 +53,7 @@ export interface Student {
   additionQuiz: any | null | number;
   substractionQuiz: any | null | number;
   group: Group;
+  urlImage: any | null | string;
 }
 
 export interface User {
