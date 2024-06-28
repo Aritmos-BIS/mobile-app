@@ -3,8 +3,17 @@ import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, ScrollView
 import demoService from '../services/demoService';
 import { Student } from '../types/user.type';
 import useAuth from '../hooks/useAuth';
+import { useNavigation, NavigationProp } from '@react-navigation/native';
+
+type RootStackParamList = {
+  Home: undefined;
+  Profile: undefined;
+  Tournament: undefined;
+  Camera: undefined;
+};
 
 export function ProfilePage() {
+  const navigation = useNavigation<NavigationProp<RootStackParamList>>();
   const { logout, loading } = useAuth();
   const [_loading, setLoading] = useState(true);
   const [data, setData] = useState<Student | undefined>(undefined);
@@ -43,7 +52,10 @@ export function ProfilePage() {
           <Text style={styles.title}>Perfil de {data?.name}</Text>
         </View>
         <View style={styles.infoContainer}>
-          <Image style={styles.imageContainer} source={require('../assets/ProfilePic.png')} />
+          <Image style={styles.imageFormat} source={require('../assets/ProfilePic.png')} />
+          <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('Camera')}>
+            <Text style={styles.buttonText}>Change photo</Text>
+          </TouchableOpacity>
           <Text style={styles.textInfo}>Name: {data?.name}</Text>
           <Text style={styles.textInfo}>Group: {data?.group.name}</Text>
         </View>
@@ -57,7 +69,7 @@ export function ProfilePage() {
           <Text style={styles.textInfo}>Victorias: 1</Text>
           <Text style={styles.textInfo}>Torneos jugados: 1</Text>
           <Text style={styles.textInfo}>Monstruo favorito:</Text>
-          <Image style={styles.imageContainer} source={require('../assets/axo.png')} />
+          <Image style={styles.imageFormat} source={require('../assets/axo.png')} />
         </View>
       </View>
       <TouchableOpacity style={styles.logoutBtn} onPress={handleLogOut}>
@@ -93,11 +105,12 @@ const styles = StyleSheet.create({
     alignItems:'center',
     marginVertical: 10,
   },
-  imageContainer: {
+  imageFormat: {
     width: 150,
     height: 150,
     padding: 20,
-    margin: 20,
+    marginTop: 20,
+    marginBottom: 5,
   },
   title: {
     fontSize: 24,
@@ -109,6 +122,19 @@ const styles = StyleSheet.create({
     fontSize: 18,
     color: 'white',
     textAlign: 'center',
+  },
+  buttonText:{
+    fontSize: 15,
+    color: 'white',
+    textAlign: 'center',
+  },
+  editBtn:{
+    backgroundColor: '#C77DFF',
+    width: 'auto',
+    height: 'auto',
+    borderRadius: 15,
+    padding: 10,
+    marginBottom: 20,
   },
   statusContainer: {
     width: '100%',

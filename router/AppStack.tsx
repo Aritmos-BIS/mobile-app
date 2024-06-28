@@ -5,6 +5,7 @@ import { Button } from "react-native";
 import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import TournamentPage from "../pages/TournamentPage";
+import CameraPage from '../pages/CameraPage';
 
 const Stack = createNativeStackNavigator();
 
@@ -55,6 +56,19 @@ function AppStack() {
         }}
         name="Tournament"
         component={TournamentPage}
+      />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            backgroundColor: '#5A189A',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+        name="Camera"
+        component={CameraPage}
       />
     </Stack.Navigator>
   );
