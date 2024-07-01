@@ -18,6 +18,7 @@ import { Cloudinary } from "@cloudinary/url-gen";
 import { UploadApiOptions, upload } from "cloudinary-react-native";
 import * as Crypto from "expo-crypto";
 import React from "react";
+import useCameraUpload from "../hooks/useCameraUpload"
 
 export default function CameraPage() {
   const [facing, setFacing] = useState("back");
@@ -136,7 +137,8 @@ export default function CameraPage() {
           style={{width: 150, height: 150}}
         />
         <Button
-          onPress={() => {
+          onPress={async () => {
+            await useCameraUpload(image.uri)
             setImage(null);
           }}
           title="Back"

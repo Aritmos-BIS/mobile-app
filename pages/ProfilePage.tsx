@@ -52,7 +52,7 @@ export function ProfilePage() {
           <Text style={styles.title}>Perfil de {data?.name}</Text>
         </View>
         <View style={styles.infoContainer}>
-          <Image style={styles.imageFormat} source={require('../assets/ProfilePic.png')} />
+          <Image style={styles.imageFormat} source={data?.urlImage == "" ? require('../assets/ProfilePic.png') : {uri: data?.urlImage}} />
           <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('Camera')}>
             <Text style={styles.buttonText}>Change photo</Text>
           </TouchableOpacity>
@@ -111,6 +111,7 @@ const styles = StyleSheet.create({
     padding: 20,
     marginTop: 20,
     marginBottom: 5,
+    borderRadius: 75
   },
   title: {
     fontSize: 24,
