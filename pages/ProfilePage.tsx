@@ -4,6 +4,7 @@ import demoService from '../services/demoService';
 import { Student } from '../types/user.type';
 import useAuth from '../hooks/useAuth';
 import { useNavigation, NavigationProp } from '@react-navigation/native';
+import AppLoader from './AppLoader';
 
 type RootStackParamList = {
   Home: undefined;
@@ -40,7 +41,7 @@ export function ProfilePage() {
   if (loading || _loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator />
+        <AppLoader />
       </View>
     );
   }
@@ -52,7 +53,7 @@ export function ProfilePage() {
           <Text style={styles.title}>Perfil de {data?.name}</Text>
         </View>
         <View style={styles.infoContainer}>
-          <Image style={styles.imageFormat} source={data?.urlImage == "" ? require('../assets/ProfilePic.png') : {uri: data?.urlImage}} />
+          <Image style={styles.imageFormat} source={data?.urlImage == "" ? require('../assets/ProfilePic.png') : { uri: data?.urlImage }} />
           <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('Camera')}>
             <Text style={styles.buttonText}>Change photo</Text>
           </TouchableOpacity>
@@ -102,7 +103,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   infoContainer: {
-    alignItems:'center',
+    alignItems: 'center',
     marginVertical: 10,
   },
   imageFormat: {
@@ -123,12 +124,12 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
-  buttonText:{
+  buttonText: {
     fontSize: 15,
     color: 'white',
     textAlign: 'center',
   },
-  editBtn:{
+  editBtn: {
     backgroundColor: '#C77DFF',
     width: 'auto',
     height: 'auto',

@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { StyleSheet, Text, TextInput, View, Image, TouchableOpacity, ActivityIndicator } from 'react-native';
 import useAuth from "../hooks/useAuth";
+import AppLoader from './AppLoader';
 
 
 export function LoginPage() {
@@ -28,7 +29,7 @@ export function LoginPage() {
   if (loading) {
     return (
       <View style={styles.mainContainer}>
-        <ActivityIndicator />
+        <AppLoader />
       </View>
     );
   }
