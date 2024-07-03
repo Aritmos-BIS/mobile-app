@@ -1,8 +1,8 @@
 import React, { useEffect } from 'react';
-import { View, Text, StyleSheet, Image } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
-const LandscapeScreen = () => {
+const Instruction = ({ navigation }) => {
   useEffect(() => {
     const lockOrientation = async () => {
       await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
@@ -24,6 +24,12 @@ const LandscapeScreen = () => {
           resizeMode="contain"
         />
       </View>
+      <TouchableOpacity
+        style={[styles.buttonStyle, styles.exitButton]}
+        onPress={() => navigation.navigate('Game')}
+      >
+        <Text style={styles.buttonText}>Next</Text>
+      </TouchableOpacity>
     </View>
   );
 };
@@ -114,4 +120,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default LandscapeScreen;
+export default Instruction;

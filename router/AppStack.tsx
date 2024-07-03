@@ -6,7 +6,8 @@ import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import TournamentPage from "../pages/TournamentPage";
 import CameraPage from '../pages/CameraPage';
-import ControlPage from '../pages/ControlPage';
+import InstructionPage from '../pages/InstructionPage';
+import GamePage from '../pages/GamePage';
 
 
 const Stack = createNativeStackNavigator();
@@ -82,9 +83,23 @@ function AppStack() {
             fontWeight: 'bold',
           },
         }}
-        name="Control"
-        component={ControlPage}
+        name="Instruction"
+        component={InstructionPage}
       />
+      <Stack.Screen
+        options={{
+          headerStyle: {
+            backgroundColor: '#5A189A',
+          },
+          headerTintColor: '#fff',
+          headerTitleStyle: {
+            fontWeight: 'bold',
+          },
+        }}
+        name="Game"
+        component={GamePage}
+      />
+
     </Stack.Navigator>
   );
 }

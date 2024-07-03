@@ -70,7 +70,7 @@ export function ProfilePage() {
           <Text style={styles.textInfo}>Victorias: 1</Text>
           <Text style={styles.textInfo}>Torneos jugados: 1</Text>
           <Text style={styles.textInfo}>Monstruo favorito:</Text>
-          <Image style={styles.imageFormat} source={require('../assets/axo.png')} />
+          <Image style={styles.imageContainer} source={require('../assets/axo.png')} />
         </View>
       </View>
       <TouchableOpacity style={styles.logoutBtn} onPress={handleLogOut}>
@@ -113,6 +113,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 5,
     borderRadius: 75
+  },
+  imageContainer: {
+    width: 150,
+    height: 150,
+    padding: 20,
+    marginTop: 20,
+    marginBottom: 5,
   },
   title: {
     fontSize: 24,
