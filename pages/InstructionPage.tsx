@@ -20,7 +20,8 @@ const Instruction = ({ navigation }) => {
       <View style={styles.container}>
         <Text style={styles.label}>Coloca tu tarjeta de monstruo favorita sobre el tablero</Text>
         <Image
-          source={require('../assets/ProfilePic.png')}
+          style={styles.imageStyle}
+          source={require('../assets/sensorAnim.gif')}
           resizeMode="contain"
         />
       </View>
@@ -52,9 +53,15 @@ const styles = StyleSheet.create({
     shadowRadius: 10,
     shadowOffset: { width: 0, height: 2 },
     elevation: 5,
+    alignItems: 'center',
+    justifyContent: 'center',
   },
   infoContainer: {
     marginVertical: 10,
+  },
+  imageStyle: {
+    width: 200,
+    height: 200,
   },
   title: {
     fontSize: 36,
@@ -68,6 +75,7 @@ const styles = StyleSheet.create({
     textAlign: 'center',
     color: '#fff',
     fontWeight: 'bold',
+    marginBottom: 20, // Add margin to separate the text from the image
   },
   buttonStyle: {
     backgroundColor: '#E0AAFF',
