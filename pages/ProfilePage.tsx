@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, ScrollView, Image } from 'react-native';
-import demoService from '../services/demoService';
 import { Student } from '../types/user.type';
 import useAuth from '../hooks/useAuth';
-import { useNavigation, NavigationProp } from '@react-navigation/native';
+import { useNavigation, NavigationProp, useFocusEffect  } from '@react-navigation/native';
+import { getProfile } from '../services/profileService';
 
 type RootStackParamList = {
   Home: undefined;
@@ -18,9 +18,11 @@ export function ProfilePage() {
   const [_loading, setLoading] = useState(true);
   const [data, setData] = useState<Student | undefined>(undefined);
 
-  useEffect(() => {
-    handleLoad();
-  }, []);
+  useFocusEffect(
+    useCallback(() => {
+      handleLoad();
+    }, [])
+  );
 
   useEffect(() => {
     console.log({ data });
@@ -32,8 +34,9 @@ export function ProfilePage() {
 
   const handleLoad = async () => {
     setLoading(true);
-    const _data = await demoService();
+    const _data = await getProfile();
     setData(_data);
+    console.log({_data}); 
     setLoading(false);
   };
 
