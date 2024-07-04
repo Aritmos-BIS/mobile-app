@@ -1,19 +1,22 @@
-import React, { useEffect } from 'react';
+import React from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
+import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
 const Instruction = ({ navigation }) => {
-  useEffect(() => {
-    const lockOrientation = async () => {
-      await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-    };
+  useFocusEffect(
+    React.useCallback(() => {
+      const lockOrientation = async () => {
+        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+      };
 
-    lockOrientation();
+      lockOrientation();
 
-    return () => {
-      ScreenOrientation.unlockAsync();
-    };
-  }, []);
+      return () => {
+        ScreenOrientation.unlockAsync();
+      };
+    }, [])
+  );
 
   return (
     <View style={styles.mainContainer}>
@@ -56,26 +59,16 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  infoContainer: {
-    marginVertical: 10,
-  },
   imageStyle: {
     width: 200,
     height: 200,
-  },
-  title: {
-    fontSize: 36,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginBottom: 20,
   },
   label: {
     fontSize: 24,
     textAlign: 'center',
     color: '#fff',
     fontWeight: 'bold',
-    marginBottom: 20, // Add margin to separate the text from the image
+    marginBottom: 20,
   },
   buttonStyle: {
     backgroundColor: '#E0AAFF',
@@ -89,42 +82,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
     fontWeight: 'bold',
   },
-  modalOverlay: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: 'rgba(0,0,0,0.8)',
-  },
-  modalContainer: {
-    width: 300,
-    padding: 20,
-    backgroundColor: '#2C003E',
-    borderRadius: 10,
-    alignItems: 'center',
-  },
-  modalText: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    color: '#FFFFFF',
-    textAlign: 'center',
-    marginBottom: 20,
-  },
-  closeButton: {
-    backgroundColor: '#E0AAFF',
-    padding: 10,
-    borderRadius: 5,
-    width: '100%',
-    marginBottom: 10,
-  },
   exitButton: {
     backgroundColor: '#FF0000',
     marginTop: 10,
-  },
-  exitButtonText: {
-    color: 'white',
-    textAlign: 'center',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
 
