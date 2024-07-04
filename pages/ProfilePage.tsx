@@ -36,7 +36,6 @@ export function ProfilePage() {
     setLoading(true);
     const _data = await getProfile();
     setData(_data);
-    console.log({_data}); 
     setLoading(false);
   };
 

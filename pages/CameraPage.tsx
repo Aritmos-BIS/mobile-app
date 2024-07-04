@@ -40,8 +40,6 @@ export default function CameraPage({navigation}) {
       base64:true
     });
 
-    
-
     if (!result.canceled) {
       const imageSelected = result.assets[0] ?? undefined;
       setImage(imageSelected);
