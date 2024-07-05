@@ -54,6 +54,7 @@ export interface Student {
   substractionQuiz: any | null | number;
   group: Group;
   urlImage: any | null | string;
+  numberWins: null | number;
 }
 
 export interface User {
