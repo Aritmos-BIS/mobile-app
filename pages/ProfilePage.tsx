@@ -68,7 +68,7 @@ export function ProfilePage() {
         </View>
         <View style={styles.infoContainer}>
           <Text style={styles.textInfo}>Torneos ganados: 1</Text>
-          <Text style={styles.textInfo}>Victorias: 1</Text>
+          <Text style={styles.textInfo}>Victorias: {data?.numberWins}</Text>
           <Text style={styles.textInfo}>Torneos jugados: 1</Text>
           <Text style={styles.textInfo}>Monstruo favorito:</Text>
           <Image style={styles.imageFormat} source={require('../assets/axo.png')} />
