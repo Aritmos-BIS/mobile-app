@@ -6,7 +6,7 @@ import TournamentPage from './TournamentPage';
 
 const HomePage = ({ navigation }) => {
 
-  const activeTournamentTest = false;
+  const activeTournamentTest = true;
 
   return (
     <View style={styles.mainContainer}>
