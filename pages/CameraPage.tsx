@@ -1,10 +1,12 @@
 import {
   CameraCapturedPicture,
+  CameraType,
   CameraView,
   useCameraPermissions,
 } from "expo-camera";
 import { useEffect, useRef, useState } from "react";
 import {
+  ActivityIndicator,
   Button,
   Image,
   StyleSheet,
@@ -19,24 +21,28 @@ import { UploadApiOptions, upload } from "cloudinary-react-native";
 import * as Crypto from "expo-crypto";
 import React from "react";
 import useCameraUpload from "../hooks/useCameraUpload"
+import { patchProfile } from "../services/profileService";
 
-export default function CameraPage() {
-  const [facing, setFacing] = useState("back");
+export default function CameraPage({navigation}) {
+  const [loading, setLoading] = useState(false)
+  const [facing, setFacing] = useState<CameraType>("back");
+  const [image, setImage] = useState<CameraCapturedPicture | ImagePicker.ImagePickerAsset>();
   const [cameraPermission, requestCameraPermission] = useCameraPermissions();
-  const cameraRef = useRef<CameraView>(null);
   const [mediaPermission, requestMediaPermission] = MediaLibrary.usePermissions();
-  const [image, setImage] = useState<CameraCapturedPicture>();
-
+  const cameraRef = useRef<CameraView>(null);
+  
   const pickImage = async () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.All,
       allowsEditing: true,
       aspect: [4, 3],
       quality: 1,
+      base64:true
     });
 
     if (!result.canceled) {
-      setImage(result.assets[0].uri);
+      const imageSelected = result.assets[0] ?? undefined;
+      setImage(imageSelected);
     }
   };
 
@@ -89,26 +95,30 @@ export default function CameraPage() {
     });
   }
 
-  async function uploadImageToCloudinaryRaw(base64) {
+  async function uploadImageToCloudinaryRaw(base64:string) {
     const base64Image = "data:image/jpeg;base64," + base64;
     const formData = new FormData();
     const public_id = Crypto.randomUUID();
-    formData.append("file", base64Image, "file");
+    formData.append("file", base64Image as any, "file");
     formData.append("upload_preset", "ml_default");
     formData.append("public_id", public_id);
     const response = await fetch("https://api.cloudinary.com/v1_1/dwdnlzpjy/image/upload", {
       method: "POST",
       body: formData,
     }).then((res) => res.json())
-      .catch((err) => err);
-    console.log(response);
+    .catch((err) => err);
+
+    return response.secure_url;
   }
+
+  const uploadNewImageUrl = (url:string) => patchProfile({urlImage:url})
 
   function toggleCameraFacing() {
     setFacing((current) => (current === "back" ? "front" : "back"));
   }
 
   async function takePicture() {
+    
     if (!mediaPermission?.granted && mediaPermission?.canAskAgain) {
       requestMediaPermission();
     }
@@ -116,14 +126,28 @@ export default function CameraPage() {
       cameraRef.current
         .takePictureAsync({ skipProcessing: true, base64: true })
         .then(async (picture) => {
+          setLoading(true)
           try {
-            setImage(picture);
-            uploadImageToCloudinaryRaw(picture.base64);
+              if(picture?.base64){
+                const urlImage = await uploadImageToCloudinaryRaw(picture.base64);
+                await uploadNewImageUrl(urlImage)
+              }
+              setImage(picture);
           } catch (error) {
             alert("We couldn't take the picture");
+          }finally{
+            setLoading(false)
           }
         });
     }
+  }
+
+  if (loading) {
+    return (
+      <View style = {styles.containerShowPhoto}>
+        <ActivityIndicator/>
+      </View>
+    );
   }
 
   if (image) {
@@ -137,10 +161,7 @@ export default function CameraPage() {
           style={{width: 150, height: 150}}
         />
         <Button
-          onPress={async () => {
-            await useCameraUpload(image.uri)
-            setImage(null);
-          }}
+          onPress={() => navigation.navigate('Profile')}
           title="Back"
         />
       </View>
