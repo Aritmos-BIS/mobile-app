@@ -6,20 +6,31 @@ import TournamentPage from './TournamentPage';
 
 const HomePage = ({ navigation }) => {
 
+  const activeTournamentTest = false;
+
   return (
     <View style={styles.mainContainer}>
       <View style={styles.container}>
-        <Text style={styles.title}>Torneos Activos</Text>
-        <View style={styles.infoContainer}>
-          <Text style={styles.label}>Grupo: 301</Text>
-          <Text style={styles.label}>Prof: Raul Muñiz</Text>
-        </View>
-        <View style={styles.infoContainer}>
-          <Text style={styles.label}>Participantes: 10</Text>
-        </View>
-        <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate("Tournament")}>
-          <Text style={styles.buttonText}>Entrar</Text>
-        </TouchableOpacity>
+        {activeTournamentTest ? (
+          <>
+            <Text style={styles.title}>Torneo Activo</Text>
+            <View style={styles.infoContainer}>
+              <Text style={styles.label}>Grupo: prueba</Text>
+              <Text style={styles.label}>Prof: prueba</Text>
+            </View>
+            <View style={styles.infoContainer}>
+              <Text style={styles.label}>Participantes: 999</Text>
+            </View>
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              onPress={() => navigation.navigate("Tournament")}
+            >
+              <Text style={styles.buttonText}>Entrar</Text>
+            </TouchableOpacity>
+          </>
+        ) : (
+          <Text style={styles.title}>No hay torneos activos</Text>
+        )}
       </View>
     </View>
   );
