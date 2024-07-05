@@ -83,19 +83,6 @@ function AppStack() {
             fontWeight: 'bold',
           },
         }}
-        name="Instruction"
-        component={InstructionPage}
-      />
-      <Stack.Screen
-        options={{
-          headerStyle: {
-            backgroundColor: '#5A189A',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
-        }}
         name="Game"
         component={GamePage}
       />

@@ -14,7 +14,7 @@ const TournamentPage = ({ navigation }) => {
         <TouchableOpacity style={styles.buttonStyle} onPress={() => setModalVisible(true)}>
           <Text style={styles.buttonText}>Salir del torneo</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Instruction')}>
+        <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Game')}>
           <Text style={styles.buttonText}>Entrar al torneo</Text>
         </TouchableOpacity>
       </View>
