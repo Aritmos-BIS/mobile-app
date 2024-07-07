@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Modal } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, TextInput } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
-const GamePage = () => {
+const App = () => {
   const [showInstruction, setShowInstruction] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
+  const [difficulty, setDifficulty] = useState(null);
+  //const [answer, setAnswer] = useState('');
+  //const [submittedAnswer, setSubmittedAnswer] = useState('');
 
   useFocusEffect(
     React.useCallback(() => {
@@ -28,6 +31,62 @@ const GamePage = () => {
   const handleNext = () => {
     setShowInstruction(false);
   };
+
+  const handleDifficulty = (selectedDifficulty) => {
+    setModalVisible(false);
+    setDifficulty(selectedDifficulty);
+  };
+
+  const handleAnswerSubmit = () => {
+    setSubmittedAnswer(answer);
+    setAnswer('');
+  };
+
+  const handleBackToDifficultySelection = () => {
+    setDifficulty(null);
+    setModalVisible(true);
+  };
+
+  const getDifficultyStyle = () => {
+    switch (difficulty) {
+      case 'Fácil':
+        return { backgroundColor: '#7ed957' };
+      case 'Medio':
+        return { backgroundColor: '#f5b45b' };
+      case 'Difícil':
+        return { backgroundColor: '#ea5951' };
+      default:
+        return { backgroundColor: '#fff' };
+    }
+  };
+
+  if (difficulty) {
+    return (
+      <View style={styles.mainContainer}>
+        <Text style={[styles.labelDifficulty, getDifficultyStyle()]}>{difficulty}</Text>
+        <View style={styles.container}>
+          <Text style={styles.label}>*Pregunta bien matemática*</Text>
+          <TextInput
+            style={styles.input}
+            placeholder="Escribe tu respuesta"
+          />
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[styles.buttonStyle, styles.backButton]}
+              onPress={handleBackToDifficultySelection}
+            >
+              <Text style={styles.buttonText}>Volver</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.buttonStyle}
+            >
+              <Text style={styles.buttonText}>Enviar Respuesta</Text>
+            </TouchableOpacity>
+          </View>
+        </View>
+      </View>
+    );
+  }
 
   return (
     <View style={styles.mainContainer}>
@@ -75,21 +134,21 @@ const GamePage = () => {
               <View style={styles.modalContainer}>
                 <TouchableOpacity
                   style={styles.easyBtn}
-                  onPress={() => setModalVisible(!modalVisible)}
+                  onPress={() => handleDifficulty('Fácil')}
                 >
-                  <Text style={styles.buttonText}>Facil</Text>
+                  <Text style={styles.buttonText}>Fácil</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.mediumBtn}
-                  onPress={() => setModalVisible(!modalVisible)}
+                  onPress={() => handleDifficulty('Medio')}
                 >
                   <Text style={styles.buttonText}>Medio</Text>
                 </TouchableOpacity>
                 <TouchableOpacity
                   style={styles.hardBtn}
-                  onPress={() => setModalVisible(!modalVisible)}
+                  onPress={() => handleDifficulty('Difícil')}
                 >
-                  <Text style={styles.buttonText}>Dificl</Text>
+                  <Text style={styles.buttonText}>Difícil</Text>
                 </TouchableOpacity>
               </View>
             </View>
@@ -132,11 +191,25 @@ const styles = StyleSheet.create({
     fontWeight: 'bold',
     marginBottom: 20,
   },
+  labelDifficulty: {
+    fontSize: 24,
+    textAlign: 'center',
+    color: '#fff',
+    fontWeight: 'bold',
+    marginBottom: 25,
+    width: 400,
+    borderRadius: 10,
+    padding: 10,
+  },
   buttonStyle: {
     backgroundColor: '#E0AAFF',
     padding: 10,
     borderRadius: 5,
     marginTop: 20,
+  },
+  backButton: {
+    marginLeft: 10,
+    backgroundColor: '#FF6347',
   },
   buttonText: {
     color: 'white',
@@ -187,6 +260,30 @@ const styles = StyleSheet.create({
     width: '100%',
     marginBottom: 10,
   },
+  input: {
+    height: 60,
+    textAlign: 'center',
+    borderColor: '#ccc',
+    borderWidth: 1,
+    borderRadius: 5,
+    marginBottom: 20,
+    paddingHorizontal: 10,
+    color: '#fff',
+    margin: 10,
+    padding: 10,
+    width: '80%',
+    backgroundColor: '#C77DFF',
+    fontSize: 20,
+  },
+  submittedText: {
+    fontSize: 16,
+    color: '#fff',
+    marginTop: 20,
+  },
+  buttonContainer: {
+    flexDirection: 'row',
+    alignItems: 'center',
+  },
 });
 
-export default GamePage;
+export default App;

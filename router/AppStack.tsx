@@ -6,7 +6,6 @@ import HomePage from "../pages/HomePage";
 import ProfilePage from "../pages/ProfilePage";
 import TournamentPage from "../pages/TournamentPage";
 import CameraPage from '../pages/CameraPage';
-import InstructionPage from '../pages/InstructionPage';
 import GamePage from '../pages/GamePage';
 
 
@@ -75,13 +74,7 @@ function AppStack() {
       />
       <Stack.Screen
         options={{
-          headerStyle: {
-            backgroundColor: '#5A189A',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
+          headerShown: false
         }}
         name="Game"
         component={GamePage}
