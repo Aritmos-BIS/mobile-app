@@ -48,13 +48,7 @@ function AppStack() {
       />
       <Stack.Screen
         options={{
-          headerStyle: {
-            backgroundColor: '#5A189A',
-          },
-          headerTintColor: '#fff',
-          headerTitleStyle: {
-            fontWeight: 'bold',
-          },
+          headerShown:false,
         }}
         name="Tournament"
         component={TournamentPage}
