@@ -15,11 +15,12 @@ const GamePage = () => {
   const [showInstruction, setShowInstruction] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [difficulty, setDifficulty] = useState(null);
-  const [answer, setAnswer] = useState('');
-  const [submittedAnswer, setSubmittedAnswer] = useState('');
+  //const [answer, setAnswer] = useState('');
+  //const [submittedAnswer, setSubmittedAnswer] = useState('');
   const [seconds, setSeconds] = useState(60);
   const [timerActive, setTimerActive] = useState(false);
 
+  // Hook para bloquear la orientación de la pantalla en landscape al entrar en la vista
   useFocusEffect(
     React.useCallback(() => {
       const lockOrientation = async () => {
@@ -38,6 +39,7 @@ const GamePage = () => {
     }, [])
   );
 
+  // Hook para manejar el temporizador
   useEffect(() => {
     let interval = null;
     if (timerActive && seconds > 0) {
@@ -50,12 +52,14 @@ const GamePage = () => {
     return () => clearInterval(interval);
   }, [timerActive, seconds]);
 
+  // Funcion para cambiar de coloca tu carta a seleccion de dificultad
   const handleNext = () => {
     setShowInstruction(false);
     setModalVisible(true);
     setTimerActive(true);
   };
 
+  // Función para manejar la selección de la dificultad
   const handleDifficulty = (selectedDifficulty) => {
     setModalVisible(false);
     setDifficulty(selectedDifficulty);
@@ -66,11 +70,12 @@ const GamePage = () => {
     setAnswer('');
   };
 
+  // Funcion para cambiar dificutad again
   const handleBackToDifficultySelection = () => {
     setDifficulty(null);
     setModalVisible(true);
   };
-
+  // Función para obtener el estilo de la dificultad seleccionada
   const getDifficultyStyle = () => {
     switch (difficulty) {
       case 'Fácil':
