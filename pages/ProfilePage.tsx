@@ -2,7 +2,8 @@ import React, { useCallback, useEffect, useState } from 'react';
 import { StyleSheet, Text, View, TouchableOpacity, ActivityIndicator, ScrollView, Image } from 'react-native';
 import { Student } from '../types/user.type';
 import useAuth from '../hooks/useAuth';
-import { useNavigation, NavigationProp, useFocusEffect  } from '@react-navigation/native';
+import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
+import AppLoader from './AppLoader';
 import { getProfile } from '../services/profileService';
 
 type RootStackParamList = {
@@ -42,7 +43,7 @@ export function ProfilePage() {
   if (loading || _loading) {
     return (
       <View style={styles.loadingContainer}>
-        <ActivityIndicator />
+        <AppLoader />
       </View>
     );
   }
@@ -54,7 +55,7 @@ export function ProfilePage() {
           <Text style={styles.title}>Perfil de {data?.name}</Text>
         </View>
         <View style={styles.infoContainer}>
-          <Image style={styles.imageFormat} source={data?.urlImage == "" ? require('../assets/ProfilePic.png') : {uri: data?.urlImage}} />
+          <Image style={styles.imageFormat} source={data?.urlImage == "" ? require('../assets/ProfilePic.png') : { uri: data?.urlImage }} />
           <TouchableOpacity style={styles.editBtn} onPress={() => navigation.navigate('Camera')}>
             <Text style={styles.buttonText}>Change photo</Text>
           </TouchableOpacity>
@@ -71,7 +72,7 @@ export function ProfilePage() {
           <Text style={styles.textInfo}>Victorias: {data?.numberWins}</Text>
           <Text style={styles.textInfo}>Torneos jugados: 1</Text>
           <Text style={styles.textInfo}>Monstruo favorito:</Text>
-          <Image style={styles.imageFormat} source={require('../assets/axo.png')} />
+          <Image style={styles.imageContainer} source={require('../assets/axo.png')} />
         </View>
       </View>
       <TouchableOpacity style={styles.logoutBtn} onPress={handleLogOut}>
@@ -104,7 +105,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
   },
   infoContainer: {
-    alignItems:'center',
+    alignItems: 'center',
     marginVertical: 10,
   },
   imageFormat: {
@@ -114,6 +115,13 @@ const styles = StyleSheet.create({
     marginTop: 20,
     marginBottom: 5,
     borderRadius: 75
+  },
+  imageContainer: {
+    width: 150,
+    height: 150,
+    padding: 20,
+    marginTop: 20,
+    marginBottom: 5,
   },
   title: {
     fontSize: 24,
@@ -126,12 +134,12 @@ const styles = StyleSheet.create({
     color: 'white',
     textAlign: 'center',
   },
-  buttonText:{
+  buttonText: {
     fontSize: 15,
     color: 'white',
     textAlign: 'center',
   },
-  editBtn:{
+  editBtn: {
     backgroundColor: '#C77DFF',
     width: 'auto',
     height: 'auto',
