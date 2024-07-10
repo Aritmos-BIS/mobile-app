@@ -1,7 +1,7 @@
 {
   "expo": {
     "name": "Aritmos",
-    "slug": "Aritmos",
+    "slug": "aritmos-mobile",
     "version": "1.0.0",
     "orientation": "portrait",
     "icon": "./assets/icon.png",
@@ -22,6 +22,12 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
-    }
+    },
+    "extra": {
+      "eas": {
+        "projectId": "8fe63841-6140-4be7-b90d-52fddf323a7e"
+      }
+    },
+    "owner": "raulmun"
   }
 }
