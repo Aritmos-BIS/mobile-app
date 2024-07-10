@@ -1,14 +1,24 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, TextInput } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 
-const App = () => {
+// Componente Timer
+const Timer = ({ seconds }) => (
+  <View style={styles.timerContainer}>
+    <Text style={styles.timerText}>{seconds}s</Text>
+  </View>
+);
+
+// Componente principal GamePage
+const GamePage = () => {
   const [showInstruction, setShowInstruction] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [difficulty, setDifficulty] = useState(null);
-  //const [answer, setAnswer] = useState('');
-  //const [submittedAnswer, setSubmittedAnswer] = useState('');
+  const [answer, setAnswer] = useState('');
+  const [submittedAnswer, setSubmittedAnswer] = useState('');
+  const [seconds, setSeconds] = useState(60);
+  const [timerActive, setTimerActive] = useState(false);
 
   useFocusEffect(
     React.useCallback(() => {
@@ -28,8 +38,22 @@ const App = () => {
     }, [])
   );
 
+  useEffect(() => {
+    let interval = null;
+    if (timerActive && seconds > 0) {
+      interval = setInterval(() => {
+        setSeconds((seconds) => seconds - 1);
+      }, 1000);
+    } else if (seconds === 0) {
+      clearInterval(interval);
+    }
+    return () => clearInterval(interval);
+  }, [timerActive, seconds]);
+
   const handleNext = () => {
     setShowInstruction(false);
+    setModalVisible(true);
+    setTimerActive(true);
   };
 
   const handleDifficulty = (selectedDifficulty) => {
@@ -60,100 +84,104 @@ const App = () => {
     }
   };
 
-  if (difficulty) {
-    return (
-      <View style={styles.mainContainer}>
-        <Text style={[styles.labelDifficulty, getDifficultyStyle()]}>{difficulty}</Text>
-        <View style={styles.container}>
-          <Text style={styles.label}>*Pregunta bien matemática*</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Escribe tu respuesta"
-          />
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[styles.buttonStyle, styles.backButton]}
-              onPress={handleBackToDifficultySelection}
-            >
-              <Text style={styles.buttonText}>Volver</Text>
-            </TouchableOpacity>
-            <TouchableOpacity
-              style={styles.buttonStyle}
-            >
-              <Text style={styles.buttonText}>Enviar Respuesta</Text>
-            </TouchableOpacity>
-          </View>
-        </View>
-      </View>
-    );
-  }
-
   return (
     <View style={styles.mainContainer}>
-      {showInstruction ? (
-        <View style={styles.container}>
-          <Text style={styles.label}>Coloca tu tarjeta de monstruo favorita sobre el tablero</Text>
-          <Image
-            style={styles.imageStyle}
-            source={require('../assets/sensorAnim.gif')}
-            resizeMode="contain"
-          />
-          <TouchableOpacity
-            style={[styles.buttonStyle, styles.exitButton]}
-            onPress={handleNext}
-          >
-            <Text style={styles.buttonText}>Next</Text>
-          </TouchableOpacity>
-        </View>
-      ) : (
-        <View style={styles.mainContainer}>
-          <View style={styles.imageContainer}>
-            <Image
-              source={require('../assets/axo.png')}
-              resizeMode="contain"
+      {!showInstruction && timerActive && <Timer seconds={seconds} />}
+      {difficulty ? (
+        <>
+          <Text style={[styles.labelDifficulty, getDifficultyStyle()]}>{difficulty}</Text>
+          <View style={styles.container}>
+            <Text style={styles.label}>*Pregunta bien matemática*</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Escribe tu respuesta"
+              value={answer}
+              keyboardType='decimal-pad'
+              onChangeText={setAnswer}
             />
-            <Image
-              source={require('../assets/axo.png')}
-              resizeMode="contain"
-            />
-          </View>
-          <View>
-            <TouchableOpacity style={styles.buttonStyle} onPress={() => setModalVisible(true)} >
-              <Text style={styles.buttonText}>nivel</Text>
-            </TouchableOpacity>
-          </View>
-          <Modal
-            animationType="slide"
-            transparent={true}
-            visible={modalVisible}
-            onRequestClose={() => {
-              setModalVisible(!modalVisible);
-            }}
-          >
-            <View style={styles.modalOverlay}>
-              <View style={styles.modalContainer}>
-                <TouchableOpacity
-                  style={styles.easyBtn}
-                  onPress={() => handleDifficulty('Fácil')}
-                >
-                  <Text style={styles.buttonText}>Fácil</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.mediumBtn}
-                  onPress={() => handleDifficulty('Medio')}
-                >
-                  <Text style={styles.buttonText}>Medio</Text>
-                </TouchableOpacity>
-                <TouchableOpacity
-                  style={styles.hardBtn}
-                  onPress={() => handleDifficulty('Difícil')}
-                >
-                  <Text style={styles.buttonText}>Difícil</Text>
-                </TouchableOpacity>
-              </View>
+            <View style={styles.buttonContainer}>
+              <TouchableOpacity
+                style={[styles.buttonStyle, styles.backButton]}
+                onPress={handleBackToDifficultySelection}
+              >
+                <Text style={styles.buttonText}>Volver</Text>
+              </TouchableOpacity>
+              <TouchableOpacity
+                style={[styles.buttonStyle, styles.submitButton]}
+                onPress={handleAnswerSubmit}
+              >
+                <Text style={styles.buttonText}>Enviar Respuesta</Text>
+              </TouchableOpacity>
             </View>
-          </Modal>
-        </View>
+            {submittedAnswer ? (
+              <Text style={styles.submittedText}>Respuesta enviada: {submittedAnswer}</Text>
+            ) : null}
+          </View>
+        </>
+      ) : (
+        <>
+          {showInstruction ? (
+            <View style={styles.container}>
+              <Text style={styles.label}>Coloca tu tarjeta de monstruo favorita sobre el tablero</Text>
+              <Image
+                style={styles.imageStyle}
+                source={require('../assets/sensorAnim.gif')}
+                resizeMode="contain"
+              />
+              <TouchableOpacity
+                style={[styles.buttonStyle, styles.exitButton]}
+                onPress={handleNext}
+              >
+                <Text style={styles.buttonText}>Next</Text>
+              </TouchableOpacity>
+            </View>
+          ) : (
+            <View style={styles.mainContainer}>
+              <Timer seconds={seconds} />
+              <View style={styles.imageContainer}>
+                <Image
+                  source={require('../assets/axo.png')}
+                  resizeMode="contain"
+                />
+                <Image
+                  source={require('../assets/axo.png')}
+                  resizeMode="contain"
+                />
+              </View>
+              <Modal
+                animationType="slide"
+                transparent={true}
+                visible={modalVisible}
+                onRequestClose={() => {
+                  setModalVisible(!modalVisible);
+                }}
+              >
+                <View style={styles.modalOverlay}>
+                  <View style={styles.modalContainer}>
+                    <TouchableOpacity
+                      style={styles.easyBtn}
+                      onPress={() => handleDifficulty('Fácil')}
+                    >
+                      <Text style={styles.buttonText}>Fácil</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.mediumBtn}
+                      onPress={() => handleDifficulty('Medio')}
+                    >
+                      <Text style={styles.buttonText}>Medio</Text>
+                    </TouchableOpacity>
+                    <TouchableOpacity
+                      style={styles.hardBtn}
+                      onPress={() => handleDifficulty('Difícil')}
+                    >
+                      <Text style={styles.buttonText}>Difícil</Text>
+                    </TouchableOpacity>
+                  </View>
+                </View>
+              </Modal>
+            </View>
+          )}
+        </>
       )}
     </View>
   );
@@ -210,6 +238,9 @@ const styles = StyleSheet.create({
   backButton: {
     marginLeft: 10,
     backgroundColor: '#FF6347',
+  },
+  submitButton: {
+    marginLeft: 10,
   },
   buttonText: {
     color: 'white',
@@ -282,8 +313,24 @@ const styles = StyleSheet.create({
   },
   buttonContainer: {
     flexDirection: 'row',
+    justifyContent: 'space-between',
     alignItems: 'center',
+    width: '80%',
+  },
+  // Estilos del temporizador
+  timerContainer: {
+    position: 'absolute',
+    top: 20,
+    right: 20,
+    backgroundColor: '#000',
+    padding: 10,
+    borderRadius: 5,
+  },
+  timerText: {
+    color: '#fff',
+    fontSize: 16,
+    fontWeight: 'bold',
   },
 });
 
-export default App;
+export default GamePage;
