@@ -1,7 +1,9 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Modal, TextInput } from 'react-native';
+import { View, Text, StyleSheet, Image, TouchableOpacity, Modal } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
+import MathGame from '../components/MathGame';
+
 
 // Componente Timer
 const Timer = ({ seconds }) => (
@@ -15,8 +17,6 @@ const GamePage = () => {
   const [showInstruction, setShowInstruction] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [difficulty, setDifficulty] = useState(null);
-  //const [answer, setAnswer] = useState('');
-  //const [submittedAnswer, setSubmittedAnswer] = useState('');
   const [seconds, setSeconds] = useState(60);
   const [timerActive, setTimerActive] = useState(false);
 
@@ -65,16 +65,12 @@ const GamePage = () => {
     setDifficulty(selectedDifficulty);
   };
 
-  const handleAnswerSubmit = () => {
-    setSubmittedAnswer(answer);
-    setAnswer('');
-  };
-
   // Funcion para cambiar dificutad again
   const handleBackToDifficultySelection = () => {
     setDifficulty(null);
     setModalVisible(true);
   };
+
   // Función para obtener el estilo de la dificultad seleccionada
   const getDifficultyStyle = () => {
     switch (difficulty) {
@@ -95,32 +91,14 @@ const GamePage = () => {
       {difficulty ? (
         <>
           <Text style={[styles.labelDifficulty, getDifficultyStyle()]}>{difficulty}</Text>
-          <View style={styles.container}>
-            <Text style={styles.label}>*Pregunta bien matemática*</Text>
-            <TextInput
-              style={styles.input}
-              placeholder="Escribe tu respuesta"
-              value={answer}
-              keyboardType='decimal-pad'
-              onChangeText={setAnswer}
-            />
-            <View style={styles.buttonContainer}>
-              <TouchableOpacity
-                style={[styles.buttonStyle, styles.backButton]}
-                onPress={handleBackToDifficultySelection}
-              >
-                <Text style={styles.buttonText}>Volver</Text>
-              </TouchableOpacity>
-              <TouchableOpacity
-                style={[styles.buttonStyle, styles.submitButton]}
-                onPress={handleAnswerSubmit}
-              >
-                <Text style={styles.buttonText}>Enviar Respuesta</Text>
-              </TouchableOpacity>
-            </View>
-            {submittedAnswer ? (
-              <Text style={styles.submittedText}>Respuesta enviada: {submittedAnswer}</Text>
-            ) : null}
+          <MathGame difficulty={difficulty} />
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[styles.buttonStyle, styles.backButton]}
+              onPress={handleBackToDifficultySelection}
+            >
+              <Text style={styles.buttonText}>Volver</Text>
+            </TouchableOpacity>
           </View>
         </>
       ) : (
