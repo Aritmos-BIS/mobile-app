@@ -1,170 +1,113 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, StyleSheet, Image, TouchableOpacity, Modal } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
-import * as ScreenOrientation from 'expo-screen-orientation';
-import MathGame from '../components/MathGame';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { Student } from '../types/user.type';
 
+type Difficulty = 'Fácil' | 'Medio' | 'Difícil';
 
-// Componente Timer
-const Timer = ({ seconds }) => (
-  <View style={styles.timerContainer}>
-    <Text style={styles.timerText}>{seconds}s</Text>
-  </View>
-);
+const generateNumbers = (difficulty: Difficulty): number[] => {
+  const num1 = Math.floor(Math.random() * 30) + 1;
+  const num2 = Math.floor(Math.random() * 30) + 1;
+  const num3 = Math.floor(Math.random() * 30) + 1;
+  const num4 = Math.floor(Math.random() * 30) + 1;
 
-// Componente principal GamePage
-const GamePage = () => {
-  const [showInstruction, setShowInstruction] = useState(true);
-  const [modalVisible, setModalVisible] = useState(false);
-  const [difficulty, setDifficulty] = useState(null);
-  const [seconds, setSeconds] = useState(60);
-  const [timerActive, setTimerActive] = useState(false);
+  switch (difficulty) {
+    case 'Fácil':
+      return [num1, num2];
+    case 'Medio':
+      return [num1, num2, num3];
+    case 'Difícil':
+      return [num1, num2, num3, num4];
+    default:
+      return [];
+  }
+};
 
-  // Hook para bloquear la orientación de la pantalla en landscape al entrar en la vista
-  useFocusEffect(
-    React.useCallback(() => {
-      const lockOrientation = async () => {
-        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
-      };
+const calculateSum = (numbers: number[]): number => {
+  return numbers.reduce((acc, curr) => acc + curr, 0);
+};
 
-      const unlockOrientation = async () => {
-        await ScreenOrientation.unlockAsync();
-      };
+const GamePage = ({ difficulty, data }: { difficulty: Difficulty, data: Student | undefined }) => {
+  const [numbers, setNumbers] = useState<number[]>([]);
+  const [answer, setAnswer] = useState('');
+  const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
+  const [turn, setTurn] = useState<number>(1);
 
-      lockOrientation();
-
-      return () => {
-        unlockOrientation();
-      };
-    }, [])
-  );
-
-  // Hook para manejar el temporizador
   useEffect(() => {
-    let interval = null;
-    if (timerActive && seconds > 0) {
-      interval = setInterval(() => {
-        setSeconds((seconds) => seconds - 1);
-      }, 1000);
-    } else if (seconds === 0) {
-      clearInterval(interval);
+    const loadNumbers = async () => {
+      const storedNumbers = await AsyncStorage.getItem('numbers');
+      const storedDifficulty = await AsyncStorage.getItem('difficulty');
+      const storedTurn = await AsyncStorage.getItem('turn');
+
+      if (storedTurn) {
+        setTurn(parseInt(storedTurn));
+      }
+
+      if (storedNumbers && storedDifficulty === difficulty) {
+        setNumbers(JSON.parse(storedNumbers));
+      } else {
+        generateNewNumbers(difficulty);
+      }
+    };
+    loadNumbers();
+  }, [difficulty]);
+
+  const generateNewNumbers = (difficulty: Difficulty) => {
+    const newNumbers = generateNumbers(difficulty);
+    setNumbers(newNumbers);
+    AsyncStorage.setItem('numbers', JSON.stringify(newNumbers));
+    AsyncStorage.setItem('difficulty', difficulty);
+  };
+
+  const handleAnswerSubmit = async () => {
+    const sum = calculateSum(numbers);
+    const isCorrect = sum === parseInt(answer);
+    setSubmittedAnswer(answer);
+    setAnswer('');
+
+    const payload = {
+      playerId: data?.id,
+      turn,
+      correct: isCorrect,
+      level: difficulty
+    };
+
+    try {
+      await axios.put('https://aritmos-salvador511s-projects.vercel.app/api/battle/answer', payload);
+      console.log('Respuesta enviada correctamente');
+    } catch (error) {
+      console.error('Error al enviar la respuesta:', error);
     }
-    return () => clearInterval(interval);
-  }, [timerActive, seconds]);
 
-  // Funcion para cambiar de coloca tu carta a seleccion de dificultad
-  const handleNext = () => {
-    setShowInstruction(false);
-    setModalVisible(true);
-    setTimerActive(true);
-  };
+    // Incrementar el turno y guardar en AsyncStorage
+    const newTurn = turn + 1;
+    setTurn(newTurn);
+    await AsyncStorage.setItem('turn', newTurn.toString());
 
-  // Función para manejar la selección de la dificultad
-  const handleDifficulty = (selectedDifficulty) => {
-    setModalVisible(false);
-    setDifficulty(selectedDifficulty);
-  };
-
-  // Funcion para cambiar dificutad again
-  const handleBackToDifficultySelection = () => {
-    setDifficulty(null);
-    setModalVisible(true);
-  };
-
-  // Función para obtener el estilo de la dificultad seleccionada
-  const getDifficultyStyle = () => {
-    switch (difficulty) {
-      case 'Fácil':
-        return { backgroundColor: '#7ed957' };
-      case 'Medio':
-        return { backgroundColor: '#f5b45b' };
-      case 'Difícil':
-        return { backgroundColor: '#ea5951' };
-      default:
-        return { backgroundColor: '#fff' };
-    }
+    generateNewNumbers(difficulty);
   };
 
   return (
-    <View style={styles.mainContainer}>
-      {!showInstruction && timerActive && <Timer seconds={seconds} />}
-      {difficulty ? (
-        <>
-          <Text style={[styles.labelDifficulty, getDifficultyStyle()]}>{difficulty}</Text>
-          <MathGame difficulty={difficulty} />
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[styles.buttonStyle, styles.backButton]}
-              onPress={handleBackToDifficultySelection}
-            >
-              <Text style={styles.buttonText}>Volver</Text>
-            </TouchableOpacity>
-          </View>
-        </>
-      ) : (
-        <>
-          {showInstruction ? (
-            <View style={styles.container}>
-              <Text style={styles.label}>Coloca tu tarjeta de monstruo favorita sobre el tablero</Text>
-              <Image
-                style={styles.imageStyle}
-                source={require('../assets/sensorAnim.gif')}
-                resizeMode="contain"
-              />
-              <TouchableOpacity
-                style={[styles.buttonStyle, styles.exitButton]}
-                onPress={handleNext}
-              >
-                <Text style={styles.buttonText}>Next</Text>
-              </TouchableOpacity>
-            </View>
-          ) : (
-            <View style={styles.mainContainer}>
-              <Timer seconds={seconds} />
-              <View style={styles.imageContainer}>
-                <Image
-                  source={require('../assets/axo.png')}
-                  resizeMode="contain"
-                />
-                <Image
-                  source={require('../assets/axo.png')}
-                  resizeMode="contain"
-                />
-              </View>
-              <Modal
-                animationType="slide"
-                transparent={true}
-                visible={modalVisible}
-                onRequestClose={() => {
-                  setModalVisible(!modalVisible);
-                }}
-              >
-                <View style={styles.modalOverlay}>
-                  <View style={styles.modalContainer}>
-                    <TouchableOpacity
-                      style={styles.easyBtn}
-                      onPress={() => handleDifficulty('Fácil')}
-                    >
-                      <Text style={styles.buttonText}>Fácil</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.mediumBtn}
-                      onPress={() => handleDifficulty('Medio')}
-                    >
-                      <Text style={styles.buttonText}>Medio</Text>
-                    </TouchableOpacity>
-                    <TouchableOpacity
-                      style={styles.hardBtn}
-                      onPress={() => handleDifficulty('Difícil')}
-                    >
-                      <Text style={styles.buttonText}>Difícil</Text>
-                    </TouchableOpacity>
-                  </View>
-                </View>
-              </Modal>
-            </View>
-          )}
-        </>
+    <View style={styles.container}>
+      <Text style={styles.label}>Resuelve: {numbers.join(' + ')}</Text>
+      <TextInput
+        style={styles.input}
+        placeholder="Escribe tu respuesta"
+        value={answer}
+        keyboardType='decimal-pad'
+        onChangeText={setAnswer}
+      />
+      <View style={styles.buttonContainer}>
+        <TouchableOpacity
+          style={styles.submitButton}
+          onPress={handleAnswerSubmit}
+        >
+          <Text style={styles.buttonText}>Enviar Respuesta</Text>
+        </TouchableOpacity>
+      </View>
+      {submittedAnswer !== null && (
+        <Text style={styles.submittedText}>Respuesta enviada: {submittedAnswer}</Text>
       )}
     </View>
   );
