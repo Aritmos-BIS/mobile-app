@@ -23,11 +23,6 @@
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "extra": {
-      "eas": {
-        "projectId": "8fe63841-6140-4be7-b90d-52fddf323a7e"
-      }
-    },
     "owner": "raulmun"
   }
 }
