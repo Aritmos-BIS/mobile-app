@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import axios from 'axios';
+import { Student } from '../types/user.type';
 
 type Difficulty = 'Fácil' | 'Medio' | 'Difícil';
 
@@ -26,15 +28,31 @@ const calculateSum = (numbers: number[]): number => {
   return numbers.reduce((acc, curr) => acc + curr, 0);
 };
 
-const MathGame = ({ difficulty }: { difficulty: Difficulty }) => {
+const MathGame = ({ difficulty, data }: { difficulty: Difficulty, data: Student | undefined }) => {
   const [numbers, setNumbers] = useState<number[]>([]);
   const [answer, setAnswer] = useState('');
   const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
+  const [turn, setTurn] = useState<number>(1);
+  const [playerId, setPlayerId] = useState<number | null>(null);
 
   useEffect(() => {
     const loadNumbers = async () => {
       const storedNumbers = await AsyncStorage.getItem('numbers');
       const storedDifficulty = await AsyncStorage.getItem('difficulty');
+      const storedTurn = await AsyncStorage.getItem('turn');
+      const storedPlayerId = await AsyncStorage.getItem('playerId');
+
+      if (storedPlayerId) {
+        setPlayerId(parseInt(storedPlayerId));
+      } else if (data?.id) {
+        setPlayerId(data.id);
+        await AsyncStorage.setItem('playerId', data.id.toString());
+      }
+
+      if (storedTurn) {
+        setTurn(parseInt(storedTurn));
+      }
+
       if (storedNumbers && storedDifficulty === difficulty) {
         setNumbers(JSON.parse(storedNumbers));
       } else {
@@ -42,7 +60,7 @@ const MathGame = ({ difficulty }: { difficulty: Difficulty }) => {
       }
     };
     loadNumbers();
-  }, [difficulty]);
+  }, [difficulty, data]);
 
   const generateNewNumbers = (difficulty: Difficulty) => {
     const newNumbers = generateNumbers(difficulty);
@@ -51,12 +69,31 @@ const MathGame = ({ difficulty }: { difficulty: Difficulty }) => {
     AsyncStorage.setItem('difficulty', difficulty);
   };
 
-  const handleAnswerSubmit = () => {
+  const handleAnswerSubmit = async () => {
     const sum = calculateSum(numbers);
     const isCorrect = sum === parseInt(answer);
-    AsyncStorage.setItem('lastResult', JSON.stringify(isCorrect));
     setSubmittedAnswer(answer);
     setAnswer('');
+
+    const payload = {
+      playerId,
+      turn,
+      correct: isCorrect,
+      level: difficulty
+    };
+
+    try {
+      await axios.put('https://aritmos-salvador511s-projects.vercel.app/api/battle/answer', payload);
+      console.log('Respuesta enviada correctamente');
+    } catch (error) {
+      console.error('Error al enviar la respuesta:', error);
+    }
+
+    // Incrementar el turno y guardar en AsyncStorage
+    const newTurn = turn + 1;
+    setTurn(newTurn);
+    await AsyncStorage.setItem('turn', newTurn.toString());
+
     generateNewNumbers(difficulty);
   };
 
