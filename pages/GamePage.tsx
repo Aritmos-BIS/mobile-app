@@ -3,7 +3,8 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Modal } from 'react-na
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import MathGame from '../components/MathGame';
-
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Student } from '../types/user.type';
 
 // Componente Timer
 const Timer = ({ seconds }) => (
@@ -19,6 +20,7 @@ const GamePage = () => {
   const [difficulty, setDifficulty] = useState(null);
   const [seconds, setSeconds] = useState(60);
   const [timerActive, setTimerActive] = useState(false);
+  const [studentData, setStudentData] = useState<Student | undefined>(undefined);
 
   // Hook para bloquear la orientación de la pantalla en landscape al entrar en la vista
   useFocusEffect(
@@ -51,6 +53,17 @@ const GamePage = () => {
     }
     return () => clearInterval(interval);
   }, [timerActive, seconds]);
+
+  // Función para cargar los datos del estudiante desde AsyncStorage
+  useEffect(() => {
+    const loadStudentData = async () => {
+      const data = await AsyncStorage.getItem('@user');
+      if (data) {
+        setStudentData(JSON.parse(data));
+      }
+    };
+    loadStudentData();
+  }, []);
 
   // Funcion para cambiar de coloca tu carta a seleccion de dificultad
   const handleNext = () => {
@@ -91,7 +104,7 @@ const GamePage = () => {
       {difficulty ? (
         <>
           <Text style={[styles.labelDifficulty, getDifficultyStyle()]}>{difficulty}</Text>
-          <MathGame difficulty={difficulty} />
+          <MathGame difficulty={difficulty} data={studentData} />
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[styles.buttonStyle, styles.backButton]}

@@ -5,6 +5,7 @@ import useAuth from '../hooks/useAuth';
 import { useNavigation, NavigationProp, useFocusEffect } from '@react-navigation/native';
 import AppLoader from './AppLoader';
 import { getProfile } from '../services/profileService';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 type RootStackParamList = {
   Home: undefined;
@@ -36,6 +37,7 @@ export function ProfilePage() {
   const handleLoad = async () => {
     setLoading(true);
     const _data = await getProfile();
+    await AsyncStorage.setItem("@user", JSON.stringify(_data))
     setData(_data);
     setLoading(false);
   };

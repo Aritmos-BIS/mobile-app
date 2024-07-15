@@ -40,14 +40,6 @@ const MathGame = ({ difficulty, data }: { difficulty: Difficulty, data: Student 
       const storedNumbers = await AsyncStorage.getItem('numbers');
       const storedDifficulty = await AsyncStorage.getItem('difficulty');
       const storedTurn = await AsyncStorage.getItem('turn');
-      const storedPlayerId = await AsyncStorage.getItem('playerId');
-
-      if (storedPlayerId) {
-        setPlayerId(parseInt(storedPlayerId));
-      } else if (data?.id) {
-        setPlayerId(data.id);
-        await AsyncStorage.setItem('playerId', data.id.toString());
-      }
 
       if (storedTurn) {
         setTurn(parseInt(storedTurn));
@@ -74,16 +66,19 @@ const MathGame = ({ difficulty, data }: { difficulty: Difficulty, data: Student 
     const isCorrect = sum === parseInt(answer);
     setSubmittedAnswer(answer);
     setAnswer('');
+    console.log({data})
 
     const payload = {
-      playerId,
+      playerId: data?.id,
       turn,
       correct: isCorrect,
       level: difficulty
     };
 
+    console.log({payload})
+
     try {
-      await axios.put('https://aritmos-salvador511s-projects.vercel.app/api/battle/answer', payload);
+      await axios.put('https://aritmos.vercel.app/api/answer', payload);
       console.log('Respuesta enviada correctamente');
     } catch (error) {
       console.error('Error al enviar la respuesta:', error);
