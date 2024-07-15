@@ -3,17 +3,18 @@ import { NavigationContainer } from "@react-navigation/native";
 import AuthStack from "./AuthStack";
 import AppStack from "./AppStack";
 import useAuth from "../hooks/useAuth";
-import StatusPageTest from '../pages/StatusPageTest';
+import StatusPageTest from '../pages/PageTest';
 const Router: React.FC = () => {
   const { user } = useAuth();
 
   return (
-    <NavigationContainer>
-      <StatusPageTest />
-    </NavigationContainer>
+    // para que prueben pageTest y las vistas
     /*<NavigationContainer>
-      {user != undefined ? <AppStack /> : <AuthStack />}
+      <StatusPageTest />
     </NavigationContainer>*/
+    <NavigationContainer>
+      {user != undefined ? <AppStack /> : <AuthStack />}
+    </NavigationContainer>
   );
 }
 
