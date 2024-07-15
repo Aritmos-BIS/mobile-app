@@ -61,6 +61,7 @@ const GamePage = () => {
       if (data) {
         setStudentData(JSON.parse(data));
       }
+      await AsyncStorage.setItem('turn', '1');
     };
     loadStudentData();
   }, []);

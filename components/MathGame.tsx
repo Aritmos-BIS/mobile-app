@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
-import axios from 'axios';
 import { Student } from '../types/user.type';
+import AppLoader from '../pages/AppLoader';
 
 type Difficulty = 'Fácil' | 'Medio' | 'Difícil';
 
@@ -32,8 +32,8 @@ const MathGame = ({ difficulty, data }: { difficulty: Difficulty, data: Student 
   const [numbers, setNumbers] = useState<number[]>([]);
   const [answer, setAnswer] = useState('');
   const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
-  const [turn, setTurn] = useState<number>(1);
-  const [playerId, setPlayerId] = useState<number | null>(null);
+  const [turn, setTurn] = useState<number>(0);
+  const [waiting, setWaiting] = useState <boolean>(false)
 
   useEffect(() => {
     const loadNumbers = async () => {
@@ -78,19 +78,51 @@ const MathGame = ({ difficulty, data }: { difficulty: Difficulty, data: Student 
     console.log({payload})
 
     try {
-      await axios.put('https://aritmos.vercel.app/api/answer', payload);
-      console.log('Respuesta enviada correctamente');
+      const response = await fetch('http://localhost:3000/api/battle/answer', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+      const _data = await response.json();
+      console.log('Respuesta enviada correctamente', {_data});
+      handleWait()
     } catch (error) {
       console.error('Error al enviar la respuesta:', error);
     }
 
-    // Incrementar el turno y guardar en AsyncStorage
     const newTurn = turn + 1;
     setTurn(newTurn);
     await AsyncStorage.setItem('turn', newTurn.toString());
 
     generateNewNumbers(difficulty);
   };
+
+  const handleWait = async () => {
+    setWaiting(true)
+      
+    const checkTurns = async () => {
+      const response = await fetch('http://localhost:3000/api/battle/answer');
+      const _data = await response.json();
+      
+      if (_data.answerPlayer1.turn === _data.answerPlayer2.turn) {
+        setWaiting(false);
+      } else {
+        setTimeout(checkTurns, 1000);  
+      }
+    };
+  
+    checkTurns();
+  };
+
+  if (waiting) {
+    return (
+      <Modal>
+        <AppLoader></AppLoader>
+      </Modal>
+    )
+  }
 
   return (
     <View style={styles.container}>
