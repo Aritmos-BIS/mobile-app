@@ -15,8 +15,8 @@ const GamePage = () => {
   const [showInstruction, setShowInstruction] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [difficulty, setDifficulty] = useState(null);
-  //const [answer, setAnswer] = useState('');
-  //const [submittedAnswer, setSubmittedAnswer] = useState('');
+  const [answer, setAnswer] = useState('');
+  const [submittedAnswer, setSubmittedAnswer] = useState('');
   const [seconds, setSeconds] = useState(60);
   const [timerActive, setTimerActive] = useState(false);
 
