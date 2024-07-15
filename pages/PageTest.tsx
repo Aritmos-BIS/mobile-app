@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Button } from 'react-native';
-import StatusPage from './StatusPage'; // Asegúrate de que la ruta sea correcta
-import ResultPage from './ResultPage'; // Asegúrate de que la ruta sea correcta
+import StatusPage from '../components/StatusPage'; // Asegúrate de que la ruta sea correcta
+import ResultPage from '../components/ResultPage'; // Asegúrate de que la ruta sea correcta
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useFocusEffect } from '@react-navigation/native';
 
