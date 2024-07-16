@@ -3,11 +3,11 @@ import { View, Text, StyleSheet, Image } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useFocusEffect } from '@react-navigation/native';
 
-interface StatusPageProps {
+interface StatusProps {
   status: 'correct' | 'incorrect' | 'waiting';
 }
 
-const StatusPage: React.FC<StatusPageProps> = ({ status }) => {
+const StatusPage: React.FC<StatusProps> = ({ status }) => {
   useFocusEffect(
     React.useCallback(() => {
       const lockOrientation = async () => {

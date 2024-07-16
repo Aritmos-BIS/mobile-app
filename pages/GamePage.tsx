@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Modal } from 'react-na
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import MathGame from '../components/MathGame';
+import ShowInstructions from '../components/ShowInstructions';
 
 // Componente Timer
 const Timer = ({ seconds }) => (
@@ -51,26 +52,27 @@ const GamePage = () => {
     return () => clearInterval(interval);
   }, [timerActive, seconds]);
 
-  // Funcion para cambiar de coloca tu carta a seleccion de dificultad
+  // Funcion para cambiar de showinstructions a coloca tu tarjeta a seleccion de dificultad
   const handleNext = () => {
     setShowInstruction(false);
     setModalVisible(true);
-    setTimerActive(true);
   };
 
   // Función para manejar la selección de la dificultad
   const handleDifficulty = (selectedDifficulty) => {
     setModalVisible(false);
     setDifficulty(selectedDifficulty);
+    setTimerActive(true);
   };
 
-  // Funcion para cambiar dificutad again
+  // Función para volver a la selección de dificultad
   const handleBackToDifficultySelection = () => {
     setDifficulty(null);
     setModalVisible(true);
+    setTimerActive(false);
   };
 
-  // Función para obtener el estilo de la dificultad seleccionada
+  // Función para estilo dificultad
   const getDifficultyStyle = () => {
     switch (difficulty) {
       case 'Fácil':
@@ -95,20 +97,7 @@ const GamePage = () => {
       ) : (
         <>
           {showInstruction ? (
-            <View style={styles.container}>
-              <Text style={styles.label}>Coloca tu tarjeta de monstruo favorita sobre el tablero</Text>
-              <Image
-                style={styles.imageStyle}
-                source={require('../assets/sensorAnim.gif')}
-                resizeMode="contain"
-              />
-              <TouchableOpacity
-                style={[styles.buttonStyle, styles.exitButton]}
-                onPress={handleNext}
-              >
-                <Text style={styles.buttonText}>Next</Text>
-              </TouchableOpacity>
-            </View>
+            <ShowInstructions onNext={handleNext} />
           ) : (
             <View style={styles.mainContainer}>
               <Timer seconds={seconds} />
@@ -122,6 +111,7 @@ const GamePage = () => {
                   resizeMode="contain"
                 />
               </View>
+              {/* Modal de espera */}
               <Modal
                 animationType="slide"
                 transparent={true}
@@ -169,30 +159,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#10002B',
     padding: 20,
   },
-  container: {
-    backgroundColor: '#7B2CBF',
-    padding: 20,
-    width: 400,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  imageStyle: {
-    width: 200,
-    height: 200,
-  },
-  label: {
-    fontSize: 24,
-    textAlign: 'center',
-    color: '#fff',
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
   labelDifficulty: {
     fontSize: 24,
     textAlign: 'center',
@@ -202,12 +168,6 @@ const styles = StyleSheet.create({
     width: 400,
     borderRadius: 10,
     padding: 10,
-  },
-  buttonStyle: {
-    backgroundColor: '#E0AAFF',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
   },
   buttonText: {
     color: 'white',
@@ -275,3 +235,4 @@ const styles = StyleSheet.create({
 });
 
 export default GamePage;
+jewa

@@ -1,15 +1,35 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Image, Animated, TouchableOpacity } from 'react-native';
+import * as ScreenOrientation from 'expo-screen-orientation';
+import { useFocusEffect } from '@react-navigation/native';
 
-interface ResultPageProps {
+interface ResultProps {
   result: 'winner' | 'loser';
   profileImage: string;
 }
 
-const ResultPage: React.FC<ResultPageProps> = ({ result, profileImage }) => {
+const ResultPage: React.FC<ResultProps> = ({ result, profileImage }) => {
   const winnerHeight = useRef(new Animated.Value(120)).current;
   const loserHeight = useRef(new Animated.Value(120)).current;
   const [showExitButton, setShowExitButton] = useState(false);
+
+  useFocusEffect(
+    React.useCallback(() => {
+      const lockOrientation = async () => {
+        await ScreenOrientation.lockAsync(ScreenOrientation.OrientationLock.LANDSCAPE);
+      };
+
+      const unlockOrientation = async () => {
+        await ScreenOrientation.unlockAsync();
+      };
+
+      lockOrientation();
+
+      return () => {
+        unlockOrientation();
+      };
+    }, [])
+  );
 
   useEffect(() => {
     const animations = [];

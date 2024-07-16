@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, StyleSheet, Button } from 'react-native';
-import StatusPage from '../components/StatusPage'; // Asegúrate de que la ruta sea correcta
-import ResultPage from '../components/ResultPage'; // Asegúrate de que la ruta sea correcta
+import StatusPage from '../components/Status';
+import ResultPage from '../components/Result';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -28,7 +28,7 @@ const StatusPageTest: React.FC = () => {
 
   const renderContent = () => {
     if (status === 'winner' || status === 'loser') {
-      return <ResultPage result={status} />;
+      return <ResultPage result={status} profileImage="" />;
     } else {
       return <StatusPage status={status} />;
     }
@@ -51,6 +51,13 @@ const StatusPageTest: React.FC = () => {
 };
 
 const styles = StyleSheet.create({
+  mainContainer: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#10002B',
+    padding: 20,
+  },
   container: {
     flex: 1,
     justifyContent: 'center',
@@ -60,13 +67,6 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-around',
     marginTop: 20,
-  },
-  mainContainer: {
-    flex: 1,
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#10002B',
-    padding: 20,
   },
 });
 

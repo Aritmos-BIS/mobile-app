@@ -1,21 +1,21 @@
 import React, { useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity, Modal } from 'react-native';
 
-const TournamentPage = ({ navigation }) => {
+const BattlePage = ({ navigation }) => {
   const [modalVisible, setModalVisible] = useState(false);
 
   return (
     <View style={styles.mainContainer}>
-      <Text style={styles.title}>¡Ya estás en el torneo!</Text>
+      <Text style={styles.title}>¡Ya estás en la batalla!</Text>
       <View style={styles.container}>
         <View style={styles.infoContainer}>
-          <Text style={styles.label}>Pronto será tu turno para jugar en el torneo</Text>
+          <Text style={styles.label}>¿Todo listo para participar en la batalla?</Text>
         </View>
-        <TouchableOpacity style={styles.buttonStyle} onPress={() => setModalVisible(true)}>
-          <Text style={styles.buttonText}>Salir del torneo</Text>
+        <TouchableOpacity style={styles.enterButtonStyle} onPress={() => navigation.navigate('Game')}>
+          <Text style={styles.buttonText}>Si</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.buttonStyle} onPress={() => navigation.navigate('Game')}>
-          <Text style={styles.buttonText}>Entrar al torneo</Text>
+        <TouchableOpacity style={styles.exitButtonStyle} onPress={() => setModalVisible(true)}>
+          <Text style={styles.buttonText}>Aun no</Text>
         </TouchableOpacity>
       </View>
 
@@ -30,7 +30,7 @@ const TournamentPage = ({ navigation }) => {
         <View style={styles.modalOverlay}>
           <View style={styles.modalContainer}>
             <Text style={styles.modalText}>
-              Atención, estás a punto de salir del torneo, ¿estás seguro? No podrás participar en el torneo si te quedas fuera.
+              Atención, estás a punto de salir de la batalla, ¿estás seguro? No podrás participar si te quedas fuera.
             </Text>
             <TouchableOpacity
               style={styles.closeButton}
@@ -42,7 +42,7 @@ const TournamentPage = ({ navigation }) => {
               style={[styles.closeButton, styles.exitButton]}
               onPress={() => navigation.navigate('Home')}
             >
-              <Text style={styles.exitButtonText}>Salir del torneo</Text>
+              <Text style={styles.exitButtonText}>Salir de la batalla</Text>
             </TouchableOpacity>
           </View>
         </View>
@@ -86,8 +86,14 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
   },
-  buttonStyle: {
-    backgroundColor: '#E0AAFF',
+  enterButtonStyle: {
+    backgroundColor: '#00FF00',
+    padding: 10,
+    borderRadius: 5,
+    marginTop: 20,
+  },
+  exitButtonStyle: {
+    backgroundColor: '#FF0000',
     padding: 10,
     borderRadius: 5,
     marginTop: 20,
@@ -137,4 +143,4 @@ const styles = StyleSheet.create({
   },
 });
 
-export default TournamentPage;
+export default BattlePage;
