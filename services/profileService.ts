@@ -25,7 +25,9 @@ async function getProfile() {
             throw new Error(error.message);
         }
 
-        return response.json();
+        const user = response.json()
+
+        return user
 
     } catch (error) {
         alert("Error in login")
