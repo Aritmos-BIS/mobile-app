@@ -1,25 +1,64 @@
-// pages/HomePage.tsx
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
 import { useNavigation } from '@react-navigation/native';
 import TournamentPage from './TournamentPage';
+import { apiFetch } from '../libs/request';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import AppLoader from './AppLoader';
+import { Student } from '../types/user.type';
 
 const HomePage = ({ navigation }) => {
+  const [activeBattle, setActiveBattle] = useState(false)
+  const [loading, setLoading] = useState(false)
+  const [studentData, setStudentData] = useState<Student | undefined>(undefined);
 
-  const activeTournamentTest = true;
+  useEffect(() => {
+    const loadStudentData = async () => {
+      const data = await AsyncStorage.getItem('@user');
+      if (data) {
+        setStudentData(JSON.parse(data));
+      }
+    };
+    loadStudentData();
+  }, [])
+
+  useEffect(() => {
+    if (studentData) {
+      handleCheckBattle()
+    }
+  }, [studentData])
+  
+
+  const handleCheckBattle = async () => {
+    setLoading(true)
+
+    console.log({studentData})
+
+    const response = await apiFetch({ method: 'GET' }, `http://localhost:3000/api/battle/activeBattle/${studentData?.id}`)
+
+    
+
+    if (response.activeBattle) {
+      setActiveBattle(true)
+    }
+
+    setTimeout(() => {setLoading(false)}, 2000)
+    
+  }
+  
+  if(loading){
+    return <AppLoader/>
+  }
 
   return (
     <View style={styles.mainContainer}>
       <View style={styles.container}>
-        {activeTournamentTest ? (
+        {activeBattle ? (
           <>
-            <Text style={styles.title}>Torneo Activo</Text>
+            <Text style={styles.title}>Batalla Activa</Text>
             <View style={styles.infoContainer}>
-              <Text style={styles.label}>Grupo: prueba</Text>
-              <Text style={styles.label}>Prof: prueba</Text>
-            </View>
-            <View style={styles.infoContainer}>
-              <Text style={styles.label}>Participantes: 999</Text>
+              <Text style={styles.label}>Jugador 1: </Text>
+              <Text style={styles.label}>Jugador 2: </Text>
             </View>
             <TouchableOpacity
               style={styles.buttonStyle}
@@ -29,7 +68,16 @@ const HomePage = ({ navigation }) => {
             </TouchableOpacity>
           </>
         ) : (
-          <Text style={styles.title}>No hay torneos activos</Text>
+          <>
+            <Text style={styles.title}>No hay batallas activas</Text>
+            <Text style={styles.buttonText}>Presiona el botón para buscar batallas</Text>
+            <TouchableOpacity
+              style={styles.buttonStyle}
+              onPress={() => handleCheckBattle()}>
+              <Text style={styles.buttonText}>Buscar</Text>
+            </TouchableOpacity>
+          </>
+          
         )}
       </View>
     </View>

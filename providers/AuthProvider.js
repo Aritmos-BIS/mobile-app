@@ -1,6 +1,8 @@
 import React, { createContext, useEffect, useState } from "react"
 import authService from '../services/authService'
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import { getProfile } from '../services/profileService';
+
 
 const AuthContext = createContext({})
 
@@ -38,7 +40,8 @@ function AuthProvider({ children }) {
     setUser(_user)
     if (_user) {
       await AsyncStorage.setItem("@authData", JSON.stringify(_user))
-      console.log({ _user })
+      const profile = await getProfile();
+      await AsyncStorage.setItem("@user", JSON.stringify(profile))
     }
 
     setLoading(false)
@@ -49,6 +52,7 @@ function AuthProvider({ children }) {
     setLoading(true);
     
     await AsyncStorage.removeItem('@authData');
+    await AsyncStorage.removeItem('@user');
 
     setUser(undefined)
 

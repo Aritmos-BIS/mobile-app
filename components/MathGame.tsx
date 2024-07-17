@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { View, Text, TextInput, TouchableOpacity, StyleSheet } from 'react-native';
+import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'react-native';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Student } from '../types/user.type';
+import AppLoader from '../pages/AppLoader';
 
 type Difficulty = 'Fácil' | 'Medio' | 'Difícil';
 
@@ -26,15 +28,23 @@ const calculateSum = (numbers: number[]): number => {
   return numbers.reduce((acc, curr) => acc + curr, 0);
 };
 
-const MathGame = ({ difficulty, onBack }: { difficulty: Difficulty, onBack: () => void }) => {
+const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: Student | undefined, onBack: () => void } }) => {
   const [numbers, setNumbers] = useState<number[]>([]);
   const [answer, setAnswer] = useState('');
   const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
+  const [turn, setTurn] = useState<number>(0);
+  const [waiting, setWaiting] = useState <boolean>(false)
 
   useEffect(() => {
     const loadNumbers = async () => {
       const storedNumbers = await AsyncStorage.getItem('numbers');
       const storedDifficulty = await AsyncStorage.getItem('difficulty');
+      const storedTurn = await AsyncStorage.getItem('turn');
+
+      if (storedTurn) {
+        setTurn(parseInt(storedTurn));
+      }
+
       if (storedNumbers && storedDifficulty === difficulty) {
         setNumbers(JSON.parse(storedNumbers));
       } else {
@@ -42,7 +52,7 @@ const MathGame = ({ difficulty, onBack }: { difficulty: Difficulty, onBack: () =
       }
     };
     loadNumbers();
-  }, [difficulty]);
+  }, [difficulty, data]);
 
   const generateNewNumbers = (difficulty: Difficulty) => {
     const newNumbers = generateNumbers(difficulty);
@@ -51,14 +61,68 @@ const MathGame = ({ difficulty, onBack }: { difficulty: Difficulty, onBack: () =
     AsyncStorage.setItem('difficulty', difficulty);
   };
 
-  const handleAnswerSubmit = () => {
+  const handleAnswerSubmit = async () => {
     const sum = calculateSum(numbers);
     const isCorrect = sum === parseInt(answer);
-    AsyncStorage.setItem('lastResult', JSON.stringify(isCorrect));
     setSubmittedAnswer(answer);
     setAnswer('');
+    console.log({data})
+
+    const payload = {
+      playerId: data?.id,
+      turn,
+      correct: isCorrect,
+      level: difficulty
+    };
+
+    console.log({payload})
+
+    try {
+      const response = await fetch('http://localhost:3000/api/battle/answer', {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload)
+      });
+      const _data = await response.json();
+      console.log('Respuesta enviada correctamente', {_data});
+      handleWait()
+    } catch (error) {
+      console.error('Error al enviar la respuesta:', error);
+    }
+
+    const newTurn = turn + 1;
+    setTurn(newTurn);
+    await AsyncStorage.setItem('turn', newTurn.toString());
+
     generateNewNumbers(difficulty);
   };
+
+  const handleWait = async () => {
+    setWaiting(true)
+      
+    const checkTurns = async () => {
+      const response = await fetch('http://localhost:3000/api/battle/answer');
+      const _data = await response.json();
+      
+      if (_data.answerPlayer1.turn === _data.answerPlayer2.turn) {
+        setWaiting(false);
+      } else {
+        setTimeout(checkTurns, 1000);  
+      }
+    };
+  
+    checkTurns();
+  };
+
+  if (waiting) {
+    return (
+      <Modal>
+        <AppLoader></AppLoader>
+      </Modal>
+    )
+  }
 
   return (
     <View style={styles.container}>

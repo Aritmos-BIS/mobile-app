@@ -4,6 +4,8 @@ import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import MathGame from '../components/MathGame';
 import ShowInstructions from '../components/ShowInstructions';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { Student } from '../types/user.type';
 
 // Componente Timer
 const Timer = ({ seconds }) => (
@@ -19,6 +21,7 @@ const GamePage = () => {
   const [difficulty, setDifficulty] = useState(null);
   const [seconds, setSeconds] = useState(60);
   const [timerActive, setTimerActive] = useState(false);
+  const [studentData, setStudentData] = useState<Student | undefined>(undefined);
 
   // Hook para bloquear la orientación de la pantalla en landscape al entrar en la vista
   useFocusEffect(
@@ -52,7 +55,18 @@ const GamePage = () => {
     return () => clearInterval(interval);
   }, [timerActive, seconds]);
 
-  // Función para cambiar de instruccion a difficulty
+  useEffect(() => {
+    const loadStudentData = async () => {
+      const data = await AsyncStorage.getItem('@user');
+      if (data) {
+        setStudentData(JSON.parse(data));
+      }
+      await AsyncStorage.setItem('turn', '1');
+    };
+    loadStudentData();
+  }, []);
+
+  // Funcion para cambiar de coloca tu carta a seleccion de dificultad
   const handleNext = () => {
     setShowInstruction(false);
     setModalVisible(true);
@@ -92,7 +106,16 @@ const GamePage = () => {
       {difficulty ? (
         <>
           <Text style={[styles.labelDifficulty, getDifficultyStyle()]}>{difficulty}</Text>
-          <MathGame difficulty={difficulty} onBack={handleBackToDifficultySelection} />
+
+          <MathGame difficulty={difficulty} data={studentData}  onBack={handleBackToDifficultySelection} />
+          <View style={styles.buttonContainer}>
+            <TouchableOpacity
+              style={[styles.buttonStyle, styles.backButton]}
+              onPress={handleBackToDifficultySelection}
+            >
+              <Text style={styles.buttonText}>Volver</Text>
+            </TouchableOpacity>
+          </View>
         </>
       ) : (
         <>
