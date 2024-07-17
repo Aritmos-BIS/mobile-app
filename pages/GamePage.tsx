@@ -52,10 +52,11 @@ const GamePage = () => {
     return () => clearInterval(interval);
   }, [timerActive, seconds]);
 
-  // Funcion para cambiar de showinstructions a coloca tu tarjeta a seleccion de dificultad
+  // Función para cambiar de instruccion a difficulty
   const handleNext = () => {
     setShowInstruction(false);
     setModalVisible(true);
+    setTimerActive(true);
   };
 
   // Función para manejar la selección de la dificultad
@@ -69,7 +70,6 @@ const GamePage = () => {
   const handleBackToDifficultySelection = () => {
     setDifficulty(null);
     setModalVisible(true);
-    setTimerActive(false);
   };
 
   // Función para estilo dificultad
@@ -88,7 +88,7 @@ const GamePage = () => {
 
   return (
     <View style={styles.mainContainer}>
-      {!showInstruction && timerActive && <Timer seconds={seconds} />}
+      {!showInstruction && <Timer seconds={seconds} />}
       {difficulty ? (
         <>
           <Text style={[styles.labelDifficulty, getDifficultyStyle()]}>{difficulty}</Text>
@@ -235,4 +235,3 @@ const styles = StyleSheet.create({
 });
 
 export default GamePage;
-jewa
