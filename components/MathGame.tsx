@@ -28,7 +28,7 @@ const calculateSum = (numbers: number[]): number => {
   return numbers.reduce((acc, curr) => acc + curr, 0);
 };
 
-const MathGame = ({ difficulty, data }: { difficulty: Difficulty, data: Student | undefined }) => {
+const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: Student | undefined, onBack: () => void } }) => {
   const [numbers, setNumbers] = useState<number[]>([]);
   const [answer, setAnswer] = useState('');
   const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
@@ -136,6 +136,12 @@ const MathGame = ({ difficulty, data }: { difficulty: Difficulty, data: Student 
       />
       <View style={styles.buttonContainer}>
         <TouchableOpacity
+          style={[styles.submitButton, styles.backButton]}
+          onPress={onBack}
+        >
+          <Text style={styles.buttonText}>Volver</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
           style={styles.submitButton}
           onPress={handleAnswerSubmit}
         >
@@ -151,6 +157,15 @@ const MathGame = ({ difficulty, data }: { difficulty: Difficulty, data: Student 
 
 const styles = StyleSheet.create({
   container: {
+    backgroundColor: '#7B2CBF',
+    padding: 20,
+    width: 400,
+    borderRadius: 10,
+    shadowColor: '#000',
+    shadowOpacity: 0.2,
+    shadowRadius: 10,
+    shadowOffset: { width: 0, height: 2 },
+    elevation: 5,
     alignItems: 'center',
     justifyContent: 'center',
   },
@@ -185,6 +200,10 @@ const styles = StyleSheet.create({
     padding: 10,
     borderRadius: 5,
     marginTop: 20,
+  },
+  backButton: {
+    backgroundColor: '#FF6347',
+    marginLeft: 10,
   },
   buttonText: {
     color: 'white',

@@ -3,6 +3,7 @@ import { View, Text, StyleSheet, Image, TouchableOpacity, Modal } from 'react-na
 import { useFocusEffect } from '@react-navigation/native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import MathGame from '../components/MathGame';
+import ShowInstructions from '../components/ShowInstructions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '../types/user.type';
 
@@ -54,7 +55,6 @@ const GamePage = () => {
     return () => clearInterval(interval);
   }, [timerActive, seconds]);
 
-  // Función para cargar los datos del estudiante desde AsyncStorage
   useEffect(() => {
     const loadStudentData = async () => {
       const data = await AsyncStorage.getItem('@user');
@@ -77,15 +77,16 @@ const GamePage = () => {
   const handleDifficulty = (selectedDifficulty) => {
     setModalVisible(false);
     setDifficulty(selectedDifficulty);
+    setTimerActive(true);
   };
 
-  // Funcion para cambiar dificutad again
+  // Función para volver a la selección de dificultad
   const handleBackToDifficultySelection = () => {
     setDifficulty(null);
     setModalVisible(true);
   };
 
-  // Función para obtener el estilo de la dificultad seleccionada
+  // Función para estilo dificultad
   const getDifficultyStyle = () => {
     switch (difficulty) {
       case 'Fácil':
@@ -101,11 +102,12 @@ const GamePage = () => {
 
   return (
     <View style={styles.mainContainer}>
-      {!showInstruction && timerActive && <Timer seconds={seconds} />}
+      {!showInstruction && <Timer seconds={seconds} />}
       {difficulty ? (
         <>
           <Text style={[styles.labelDifficulty, getDifficultyStyle()]}>{difficulty}</Text>
-          <MathGame difficulty={difficulty} data={studentData} />
+
+          <MathGame difficulty={difficulty} data={studentData}  onBack={handleBackToDifficultySelection} />
           <View style={styles.buttonContainer}>
             <TouchableOpacity
               style={[styles.buttonStyle, styles.backButton]}
@@ -118,20 +120,7 @@ const GamePage = () => {
       ) : (
         <>
           {showInstruction ? (
-            <View style={styles.container}>
-              <Text style={styles.label}>Coloca tu tarjeta de monstruo favorita sobre el tablero</Text>
-              <Image
-                style={styles.imageStyle}
-                source={require('../assets/sensorAnim.gif')}
-                resizeMode="contain"
-              />
-              <TouchableOpacity
-                style={[styles.buttonStyle, styles.exitButton]}
-                onPress={handleNext}
-              >
-                <Text style={styles.buttonText}>Next</Text>
-              </TouchableOpacity>
-            </View>
+            <ShowInstructions onNext={handleNext} />
           ) : (
             <View style={styles.mainContainer}>
               <Timer seconds={seconds} />
@@ -145,6 +134,7 @@ const GamePage = () => {
                   resizeMode="contain"
                 />
               </View>
+              {/* Modal de espera */}
               <Modal
                 animationType="slide"
                 transparent={true}
@@ -192,30 +182,6 @@ const styles = StyleSheet.create({
     backgroundColor: '#10002B',
     padding: 20,
   },
-  container: {
-    backgroundColor: '#7B2CBF',
-    padding: 20,
-    width: 400,
-    borderRadius: 10,
-    shadowColor: '#000',
-    shadowOpacity: 0.2,
-    shadowRadius: 10,
-    shadowOffset: { width: 0, height: 2 },
-    elevation: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
-  },
-  imageStyle: {
-    width: 200,
-    height: 200,
-  },
-  label: {
-    fontSize: 24,
-    textAlign: 'center',
-    color: '#fff',
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
   labelDifficulty: {
     fontSize: 24,
     textAlign: 'center',
@@ -225,19 +191,6 @@ const styles = StyleSheet.create({
     width: 400,
     borderRadius: 10,
     padding: 10,
-  },
-  buttonStyle: {
-    backgroundColor: '#E0AAFF',
-    padding: 10,
-    borderRadius: 5,
-    marginTop: 20,
-  },
-  backButton: {
-    marginLeft: 10,
-    backgroundColor: '#FF6347',
-  },
-  submitButton: {
-    marginLeft: 10,
   },
   buttonText: {
     color: 'white',
@@ -287,32 +240,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '100%',
     marginBottom: 10,
-  },
-  input: {
-    height: 60,
-    textAlign: 'center',
-    borderColor: '#ccc',
-    borderWidth: 1,
-    borderRadius: 5,
-    marginBottom: 20,
-    paddingHorizontal: 10,
-    color: '#fff',
-    margin: 10,
-    padding: 10,
-    width: '80%',
-    backgroundColor: '#C77DFF',
-    fontSize: 20,
-  },
-  submittedText: {
-    fontSize: 16,
-    color: '#fff',
-    marginTop: 20,
-  },
-  buttonContainer: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'center',
-    width: '80%',
   },
   // Estilos del temporizador
   timerContainer: {

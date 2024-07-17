@@ -8,7 +8,6 @@ import TournamentPage from "../pages/TournamentPage";
 import CameraPage from '../pages/CameraPage';
 import GamePage from '../pages/GamePage';
 
-
 const Stack = createNativeStackNavigator();
 
 function AppStack() {
@@ -48,7 +47,7 @@ function AppStack() {
       />
       <Stack.Screen
         options={{
-          headerShown:false,
+          headerShown: false,
         }}
         name="Tournament"
         component={TournamentPage}
@@ -73,7 +72,6 @@ function AppStack() {
         name="Game"
         component={GamePage}
       />
-
     </Stack.Navigator>
   );
 }

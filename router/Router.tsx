@@ -1,15 +1,19 @@
+import React from 'react';
 import { NavigationContainer } from "@react-navigation/native";
-import { View, Text } from "react-native";
 import AuthStack from "./AuthStack";
 import AppStack from "./AppStack";
 import useAuth from "../hooks/useAuth";
-
-function Router() {
-  const demo = useAuth();
+import StatusPageTest from '../pages/PageTest';
+const Router: React.FC = () => {
+  const { user } = useAuth();
 
   return (
+    // para que prueben pageTest y las vistas
+    /*<NavigationContainer>
+      <StatusPageTest />
+    </NavigationContainer>*/
     <NavigationContainer>
-      {demo.user != undefined ? <AppStack /> : <AuthStack />}
+      {user != undefined ? <AppStack /> : <AuthStack />}
     </NavigationContainer>
   );
 }
