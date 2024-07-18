@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Image, Animated, TouchableOpacity } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useNavigation, NavigationProp } from '@react-navigation/native';
 import { Student } from '../types/user.type';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 
@@ -10,11 +10,12 @@ interface ResultProps {
   profileImage: string;
 }
 
-const ResultPage: React.FC<ResultProps> = ({ result }, { navigation }) => {
+const ResultPage: React.FC<ResultProps> = ({ result }) => {
   const winnerHeight = useRef(new Animated.Value(120)).current;
   const loserHeight = useRef(new Animated.Value(120)).current;
   const [showExitButton, setShowExitButton] = useState(false);
   const [data, setData] = useState<Student | undefined > (undefined)
+  const navigation = useNavigation<NavigationProp<any>>();
 
   useFocusEffect(
     React.useCallback(() => {
