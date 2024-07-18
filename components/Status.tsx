@@ -4,7 +4,7 @@ import * as ScreenOrientation from 'expo-screen-orientation';
 import { useFocusEffect } from '@react-navigation/native';
 
 interface StatusProps {
-  status: 'correct' | 'incorrect' | 'waiting';
+  status: 'correct' | 'incorrect' | 'waiting' | null;
 }
 
 const StatusPage: React.FC<StatusProps> = ({ status }) => {
