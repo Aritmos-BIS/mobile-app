@@ -108,14 +108,7 @@ const GamePage = () => {
           <Text style={[styles.labelDifficulty, getDifficultyStyle()]}>{difficulty}</Text>
 
           <MathGame difficulty={difficulty} data={studentData}  onBack={handleBackToDifficultySelection} />
-          <View style={styles.buttonContainer}>
-            <TouchableOpacity
-              style={[styles.buttonStyle, styles.backButton]}
-              onPress={handleBackToDifficultySelection}
-            >
-              <Text style={styles.buttonText}>Volver</Text>
-            </TouchableOpacity>
-          </View>
+        
         </>
       ) : (
         <>

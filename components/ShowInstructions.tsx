@@ -7,6 +7,7 @@ import {
   TouchableOpacity,
   Modal,
 } from "react-native";
+import { apiFetch } from "../libs/request";
 
 const images = [
   require("../assets/axo.png"),
@@ -19,22 +20,33 @@ const ShowInstructions = ({ onNext }) => {
   const [currentImageIndex, setCurrentImageIndex] = useState(0);
 
   useEffect(() => {
+    let interval;
+    let fetchInterval;
+
     if (waitingModal) {
-      const interval = setInterval(() => {
+      interval = setInterval(() => {
         setCurrentImageIndex((prevIndex) => (prevIndex + 1) % images.length);
-      }, 3000);
-      return () => clearInterval(interval);
+      }, 1500);
+
+      fetchInterval = setInterval(async () => {
+        const arimals = await apiFetch({ method: 'GET' }, 'http://localhost:3000/api/battle/arimals');
+        
+        if (arimals?.arimalPlayer1?.arimal && arimals?.arimalPlayer2?.arimal) {
+          setWaitingModal(false);
+          onNext();
+        }
+
+      }, 1500);
     }
-  }, [waitingModal]);
 
-  const handleNext = async () => {
+    return () => {
+      clearInterval(interval);
+      clearInterval(fetchInterval);
+    };
+  }, [waitingModal, onNext]);
+
+  const handleNext = () => {
     setWaitingModal(true);
-
-    // Simulación de proceso en segundo plano
-    await new Promise((resolve) => setTimeout(resolve, 10000));
-
-    setWaitingModal(false);
-    onNext();
   };
 
   const closeModal = () => {

@@ -3,8 +3,13 @@ import { View, Text, TextInput, TouchableOpacity, StyleSheet, Modal } from 'reac
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '../types/user.type';
 import AppLoader from '../pages/AppLoader';
+import StatusPage from './Status';
+import { apiFetch } from '../libs/request';
+import ResultPage from './Result';
 
 type Difficulty = 'Fácil' | 'Medio' | 'Difícil';
+type Status = 'correct' | 'incorrect' | 'waiting' | null
+type Result = 'winner' | 'loser' | null
 
 const generateNumbers = (difficulty: Difficulty): number[] => {
   const num1 = Math.floor(Math.random() * 30) + 1;
@@ -28,12 +33,14 @@ const calculateSum = (numbers: number[]): number => {
   return numbers.reduce((acc, curr) => acc + curr, 0);
 };
 
-const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: Student | undefined, onBack: () => void } }) => {
+const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: Student | undefined, onBack: () => void }) => {
   const [numbers, setNumbers] = useState<number[]>([]);
   const [answer, setAnswer] = useState('');
   const [submittedAnswer, setSubmittedAnswer] = useState<string | null>(null);
   const [turn, setTurn] = useState<number>(0);
-  const [waiting, setWaiting] = useState <boolean>(false)
+  const [isCorrect, setIsCorrect] = useState<boolean>(false);
+  const [status, setStatus] = useState<Status>(null);
+  const [result, setResult] = useState<Result>(null)
 
   useEffect(() => {
     const loadNumbers = async () => {
@@ -52,7 +59,7 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
       }
     };
     loadNumbers();
-  }, [difficulty, data]);
+  }, [difficulty]);
 
   const generateNewNumbers = (difficulty: Difficulty) => {
     const newNumbers = generateNumbers(difficulty);
@@ -63,34 +70,10 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
 
   const handleAnswerSubmit = async () => {
     const sum = calculateSum(numbers);
-    const isCorrect = sum === parseInt(answer);
+    const _result = sum === parseInt(answer);
+    setIsCorrect(_result);
     setSubmittedAnswer(answer);
     setAnswer('');
-    console.log({data})
-
-    const payload = {
-      playerId: data?.id,
-      turn,
-      correct: isCorrect,
-      level: difficulty
-    };
-
-    console.log({payload})
-
-    try {
-      const response = await fetch('http://localhost:3000/api/battle/answer', {
-        method: 'PUT',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(payload)
-      });
-      const _data = await response.json();
-      console.log('Respuesta enviada correctamente', {_data});
-      handleWait()
-    } catch (error) {
-      console.error('Error al enviar la respuesta:', error);
-    }
 
     const newTurn = turn + 1;
     setTurn(newTurn);
@@ -99,30 +82,85 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
     generateNewNumbers(difficulty);
   };
 
+  useEffect(() => {
+    const submitResult = async () => {
+      if (submittedAnswer !== null) {
+        const payload = {
+          playerId: data?.id,
+          turn: turn - 1,
+          correct: isCorrect,
+          level: difficulty
+        };
+
+        console.log({ payload });
+
+        try {
+          const response = await fetch('http://localhost:3000/api/battle/answer', {
+            method: 'PUT',
+            headers: {
+              'Content-Type': 'application/json',
+            },
+            body: JSON.stringify(payload)
+          });
+          const _data = await response.json();
+          console.log('Respuesta enviada correctamente', { _data });
+          handleWait();
+        } catch (error) {
+          console.error('Error al enviar la respuesta:', error);
+        }
+      }
+    };
+
+    submitResult();
+  }, [submittedAnswer]);
+
+
+  const handleCheckWinner = async () => {
+    const response = await apiFetch({method: 'GET'}, 'http://localhost:3000/api/battle/winner')
+    if(response?.winnerId){
+      setStatus(null)
+      setResult(response.winnerId == data?.id ? 'winner' : 'loser')
+    }
+  }
+
   const handleWait = async () => {
-    setWaiting(true)
-      
+    setStatus('waiting');
+
     const checkTurns = async () => {
       const response = await fetch('http://localhost:3000/api/battle/answer');
       const _data = await response.json();
-      
+
       if (_data.answerPlayer1.turn === _data.answerPlayer2.turn) {
-        setWaiting(false);
+        setStatus(isCorrect ? 'correct' : 'incorrect')
+        setTimeout(() => {
+          setStatus(null);
+          handleCheckWinner()
+        }, 4000)
       } else {
-        setTimeout(checkTurns, 1000);  
+        setTimeout(checkTurns, 1000);
       }
     };
-  
+
     checkTurns();
   };
 
-  if (waiting) {
-    return (
+  if(status != null){
+    return(
+    <Modal>
+      <StatusPage status={status}/>
+    </Modal>
+    )
+  }
+
+  if(result != null){
+    return(
       <Modal>
-        <AppLoader></AppLoader>
+        <ResultPage result={result}/>
       </Modal>
     )
   }
+
+
 
   return (
     <View style={styles.container}>

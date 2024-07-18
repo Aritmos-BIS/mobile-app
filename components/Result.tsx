@@ -2,16 +2,19 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, Text, StyleSheet, Image, Animated, TouchableOpacity } from 'react-native';
 import * as ScreenOrientation from 'expo-screen-orientation';
 import { useFocusEffect } from '@react-navigation/native';
+import { Student } from '../types/user.type';
+import AsyncStorage from '@react-native-async-storage/async-storage';
 
 interface ResultProps {
-  result: 'winner' | 'loser';
+  result: 'winner' | 'loser' | null;
   profileImage: string;
 }
 
-const ResultPage: React.FC<ResultProps> = ({ result, profileImage }) => {
+const ResultPage: React.FC<ResultProps> = ({ result }, { navigation }) => {
   const winnerHeight = useRef(new Animated.Value(120)).current;
   const loserHeight = useRef(new Animated.Value(120)).current;
   const [showExitButton, setShowExitButton] = useState(false);
+  const [data, setData] = useState<Student | undefined > (undefined)
 
   useFocusEffect(
     React.useCallback(() => {
@@ -30,6 +33,16 @@ const ResultPage: React.FC<ResultProps> = ({ result, profileImage }) => {
       };
     }, [])
   );
+
+  useEffect(() => {
+    const loadStudentData = async () => {
+      const data = await AsyncStorage.getItem('@user');
+      if (data) {
+        setData(JSON.parse(data));
+      }
+    };
+    loadStudentData();
+  }, []);
 
   useEffect(() => {
     const animations = [];
@@ -65,13 +78,13 @@ const ResultPage: React.FC<ResultProps> = ({ result, profileImage }) => {
             <View style={styles.podiumContainer}>
               <View style={styles.column}></View>
               <Animated.View style={[styles.column, styles.winnerColumn, { height: winnerHeight }]}>
-                <Image style={styles.imageFormat} source={profileImage ? { uri: profileImage } : require('../assets/ProfilePic.png')} />
+                <Image style={styles.imageFormat} source={data?.urlImage == "" ? require('../assets/ProfilePic.png') : { uri: data?.urlImage }} />
                 <Text style={styles.columnText}>Juanito</Text>
               </Animated.View>
               <View style={styles.column}></View>
             </View>
             {showExitButton && (
-              <TouchableOpacity style={styles.exitButton} onPress={() => console.log('Salir button pressed')}>
+              <TouchableOpacity style={styles.exitButton} onPress={() => navigation.navigate('Home')}>
                 <Text style={styles.exitButtonText}>Salir</Text>
               </TouchableOpacity>
             )}
@@ -84,13 +97,13 @@ const ResultPage: React.FC<ResultProps> = ({ result, profileImage }) => {
             <View style={styles.podiumContainer}>
               <View style={styles.column}></View>
               <Animated.View style={[styles.column, styles.loserColumn, { height: loserHeight }]}>
-                <Image style={styles.imageFormat} source={profileImage ? { uri: profileImage } : require('../assets/ProfilePic.png')} />
+                <Image style={styles.imageFormat} source={data?.urlImage == "" ? require('../assets/ProfilePic.png') : { uri: data?.urlImage }} />
                 <Text style={styles.columnText}>Panchito</Text>
               </Animated.View>
               <View style={styles.column}></View>
             </View>
             {showExitButton && (
-              <TouchableOpacity style={styles.exitButton} onPress={() => console.log('Salir button pressed')}>
+              <TouchableOpacity style={styles.exitButton} onPress={() => navigation.navigate('Home')}>
                 <Text style={styles.exitButtonText}>Salir</Text>
               </TouchableOpacity>
             )}
