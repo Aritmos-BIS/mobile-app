@@ -86,6 +86,7 @@ export function ProfilePage() {
 
 const styles = StyleSheet.create({
   loadingContainer: {
+    backgroundColor: '#10002B',
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
