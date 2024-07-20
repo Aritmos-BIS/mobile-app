@@ -127,9 +127,8 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
     setStatus('waiting');
 
     const checkTurns = async () => {
-      const response = await fetch('http://localhost:3000/api/battle/answer');
-      const _data = await response.json();
-
+      const _data = await apiFetch({ method: 'GET' }, 'http://localhost:3000/api/battle/answer');
+   
       if (_data.answerPlayer1.turn === _data.answerPlayer2.turn) {
         setStatus(isCorrect ? 'correct' : 'incorrect')
         setTimeout(() => {

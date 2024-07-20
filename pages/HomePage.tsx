@@ -11,12 +11,13 @@ const HomePage = ({ navigation }) => {
   const [activeBattle, setActiveBattle] = useState(false)
   const [loading, setLoading] = useState(false)
   const [studentData, setStudentData] = useState<Student | undefined>(undefined);
+  const [data, setData] = useState({})
 
   useEffect(() => {
     const loadStudentData = async () => {
-      const data = await AsyncStorage.getItem('@user');
-      if (data) {
-        setStudentData(JSON.parse(data));
+      const _data = await AsyncStorage.getItem('@user');
+      if (_data) {
+        setStudentData(JSON.parse(_data));
       }
     };
     loadStudentData();
@@ -35,7 +36,7 @@ const HomePage = ({ navigation }) => {
     console.log({studentData})
 
     const response = await apiFetch({ method: 'GET' }, `http://localhost:3000/api/battle/activeBattle/${studentData?.id}`)
-
+    setData(response)
     
 
     if (response.activeBattle) {
@@ -57,8 +58,8 @@ const HomePage = ({ navigation }) => {
           <>
             <Text style={styles.title}>Batalla Activa</Text>
             <View style={styles.infoContainer}>
-              <Text style={styles.label}>Jugador 1: </Text>
-              <Text style={styles.label}>Jugador 2: </Text>
+              <Text style={styles.label}>Jugador 1: {data?.player1}</Text>
+              <Text style={styles.label}>Jugador 2: {data?.player2}</Text>
             </View>
             <TouchableOpacity
               style={styles.buttonStyle}
