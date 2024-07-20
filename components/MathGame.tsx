@@ -7,7 +7,7 @@ import StatusPage from './Status';
 import { apiFetch } from '../libs/request';
 import ResultPage from './Result';
 
-type Difficulty = 'Fácil' | 'Medio' | 'Difícil';
+type Difficulty = 'easy' | 'medium' | 'hard';
 type Status = 'correct' | 'incorrect' | 'waiting' | null
 type Result = 'winner' | 'loser' | null
 
@@ -18,11 +18,11 @@ const generateNumbers = (difficulty: Difficulty): number[] => {
   const num4 = Math.floor(Math.random() * 30) + 1;
 
   switch (difficulty) {
-    case 'Fácil':
+    case 'easy':
       return [num1, num2];
-    case 'Medio':
+    case 'medium':
       return [num1, num2, num3];
-    case 'Difícil':
+    case 'hard':
       return [num1, num2, num3, num4];
     default:
       return [];

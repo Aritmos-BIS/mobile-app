@@ -89,11 +89,11 @@ const GamePage = () => {
   // Función para estilo dificultad
   const getDifficultyStyle = () => {
     switch (difficulty) {
-      case 'Fácil':
+      case 'easy':
         return { backgroundColor: '#7ed957' };
-      case 'Medio':
+      case 'medium':
         return { backgroundColor: '#f5b45b' };
-      case 'Difícil':
+      case 'hard':
         return { backgroundColor: '#ea5951' };
       default:
         return { backgroundColor: '#fff' };
@@ -140,19 +140,19 @@ const GamePage = () => {
                   <View style={styles.modalContainer}>
                     <TouchableOpacity
                       style={styles.easyBtn}
-                      onPress={() => handleDifficulty('Fácil')}
+                      onPress={() => handleDifficulty('easy')}
                     >
                       <Text style={styles.buttonText}>Fácil</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.mediumBtn}
-                      onPress={() => handleDifficulty('Medio')}
+                      onPress={() => handleDifficulty('medium')}
                     >
                       <Text style={styles.buttonText}>Medio</Text>
                     </TouchableOpacity>
                     <TouchableOpacity
                       style={styles.hardBtn}
-                      onPress={() => handleDifficulty('Difícil')}
+                      onPress={() => handleDifficulty('hard')}
                     >
                       <Text style={styles.buttonText}>Difícil</Text>
                     </TouchableOpacity>
