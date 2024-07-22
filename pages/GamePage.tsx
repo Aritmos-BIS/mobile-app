@@ -105,7 +105,7 @@ const GamePage = () => {
       {!showInstruction && <Timer seconds={seconds} />}
       {difficulty ? (
         <>
-          <Text style={[styles.labelDifficulty, getDifficultyStyle()]}>{difficulty}</Text>
+          <Text style={[styles.labelDifficulty, getDifficultyStyle()]}>{difficulty == 'easy' ? 'Fácil' : difficulty == 'medium' ? 'Medio' : 'Difícil'}</Text>
 
           <MathGame difficulty={difficulty} data={studentData}  onBack={handleBackToDifficultySelection} />
         
