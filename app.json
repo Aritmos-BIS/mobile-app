@@ -18,11 +18,17 @@
       "adaptiveIcon": {
         "foregroundImage": "./assets/adaptive-icon.png",
         "backgroundColor": "#ffffff"
-      }
+      },
+      "package": "com.raulmun.aritmosmobile"
     },
     "web": {
       "favicon": "./assets/favicon.png"
     },
-    "owner": "raulmun"
+    "owner": "raulmun",
+    "extra": {
+      "eas": {
+        "projectId": "8fe63841-6140-4be7-b90d-52fddf323a7e"
+      }
+    }
   }
 }

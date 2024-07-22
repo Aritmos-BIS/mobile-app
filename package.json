@@ -6,7 +6,8 @@
     "start": "expo start",
     "android": "expo start --android",
     "ios": "expo start --ios",
-    "web": "expo start --web"
+    "web": "expo start --web",
+    "build": "expo build:android"
   },
   "dependencies": {
     "@cloudinary/url-gen": "^1.19.0",
@@ -19,6 +20,7 @@
     "expo": "~51.0.21",
     "expo-camera": "~15.0.14",
     "expo-crypto": "^13.0.2",
+    "expo-doctor": "^1.8.2",
     "expo-image-picker": "~15.0.7",
     "expo-media-library": "~16.0.4",
     "expo-screen-orientation": "~7.0.5",
