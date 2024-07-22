@@ -7,20 +7,11 @@ import ShowInstructions from '../components/ShowInstructions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '../types/user.type';
 
-// Componente Timer
-const Timer = ({ seconds }) => (
-  <View style={styles.timerContainer}>
-    <Text style={styles.timerText}>{seconds}s</Text>
-  </View>
-);
-
 // Componente principal GamePage
 const GamePage = () => {
   const [showInstruction, setShowInstruction] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [difficulty, setDifficulty] = useState(null);
-  const [seconds, setSeconds] = useState(60);
-  const [timerActive, setTimerActive] = useState(false);
   const [studentData, setStudentData] = useState<Student | undefined>(undefined);
 
   // Hook para bloquear la orientación de la pantalla en landscape al entrar en la vista
@@ -42,18 +33,6 @@ const GamePage = () => {
     }, [])
   );
 
-  // Hook para manejar el temporizador
-  useEffect(() => {
-    let interval = null;
-    if (timerActive && seconds > 0) {
-      interval = setInterval(() => {
-        setSeconds((seconds) => seconds - 1);
-      }, 1000);
-    } else if (seconds === 0) {
-      clearInterval(interval);
-    }
-    return () => clearInterval(interval);
-  }, [timerActive, seconds]);
 
   useEffect(() => {
     const loadStudentData = async () => {
@@ -70,14 +49,12 @@ const GamePage = () => {
   const handleNext = () => {
     setShowInstruction(false);
     setModalVisible(true);
-    setTimerActive(true);
   };
 
   // Función para manejar la selección de la dificultad
   const handleDifficulty = (selectedDifficulty) => {
     setModalVisible(false);
     setDifficulty(selectedDifficulty);
-    setTimerActive(true);
   };
 
   // Función para volver a la selección de dificultad
@@ -102,7 +79,7 @@ const GamePage = () => {
 
   return (
     <View style={styles.mainContainer}>
-      {!showInstruction && <Timer seconds={seconds} />}
+      {!showInstruction}
       {difficulty ? (
         <>
           <Text style={[styles.labelDifficulty, getDifficultyStyle()]}>{difficulty == 'easy' ? 'Fácil' : difficulty == 'medium' ? 'Medio' : 'Difícil'}</Text>
@@ -116,7 +93,6 @@ const GamePage = () => {
             <ShowInstructions onNext={handleNext} />
           ) : (
             <View style={styles.mainContainer}>
-              <Timer seconds={seconds} />
               <View style={styles.imageContainer}>
                 <Image
                   source={require('../assets/axo.png')}
@@ -233,20 +209,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     width: '100%',
     marginBottom: 10,
-  },
-  // Estilos del temporizador
-  timerContainer: {
-    position: 'absolute',
-    top: 20,
-    right: 20,
-    backgroundColor: '#000',
-    padding: 10,
-    borderRadius: 5,
-  },
-  timerText: {
-    color: '#fff',
-    fontSize: 16,
-    fontWeight: 'bold',
   },
 });
 
