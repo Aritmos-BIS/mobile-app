@@ -80,7 +80,7 @@ const ResultPage: React.FC<ResultProps> = ({ result }) => {
               <View style={styles.column}></View>
               <Animated.View style={[styles.column, styles.winnerColumn, { height: winnerHeight }]}>
                 <Image style={styles.imageFormat} source={data?.urlImage == "" ? require('../assets/ProfilePic.png') : { uri: data?.urlImage }} />
-                <Text style={styles.columnText}>Juanito</Text>
+                <Text style={styles.columnText}>{data?.name}</Text>
               </Animated.View>
               <View style={styles.column}></View>
             </View>
@@ -99,7 +99,7 @@ const ResultPage: React.FC<ResultProps> = ({ result }) => {
               <View style={styles.column}></View>
               <Animated.View style={[styles.column, styles.loserColumn, { height: loserHeight }]}>
                 <Image style={styles.imageFormat} source={data?.urlImage == "" ? require('../assets/ProfilePic.png') : { uri: data?.urlImage }} />
-                <Text style={styles.columnText}>Panchito</Text>
+                <Text style={styles.columnText}>{data?.name}</Text>
               </Animated.View>
               <View style={styles.column}></View>
             </View>
