@@ -20,18 +20,23 @@ const HomePage = ({ navigation }) => {
         setStudentData(JSON.parse(_data));
       }
     };
+
     loadStudentData();
   }, [])
 
   useEffect(() => {
-    if (studentData) {
-      handleCheckBattle()
+    const checkBattle = async () => {
+      if (studentData) {
+        await handleCheckBattle()
+      }
     }
+
+    checkBattle()
+    
   }, [studentData])
   
 
   const handleCheckBattle = async () => {
-    setLoading(true)
 
     console.log({studentData})
 
@@ -41,9 +46,11 @@ const HomePage = ({ navigation }) => {
 
     if (response.activeBattle) {
       setActiveBattle(true)
+    } else {
+      setActiveBattle(false)
     }
 
-    setTimeout(() => {setLoading(false)}, 2000)
+    setTimeout(async() => {await handleCheckBattle()}, 2000)
     
   }
   
@@ -72,11 +79,11 @@ const HomePage = ({ navigation }) => {
           <>
             <Text style={styles.title}>No hay batallas activas</Text>
             <Text style={styles.buttonText}>Presiona el botón para buscar batallas</Text>
-            <TouchableOpacity
+            {/* <TouchableOpacity
               style={styles.buttonStyle}
               onPress={() => handleCheckBattle()}>
               <Text style={styles.buttonText}>Buscar</Text>
-            </TouchableOpacity>
+            </TouchableOpacity> */}
           </>
           
         )}

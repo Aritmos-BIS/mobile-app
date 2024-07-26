@@ -30,8 +30,10 @@ const ShowInstructions = ({ onNext }) => {
 
       fetchInterval = setInterval(async () => {
         const arimals = await apiFetch({ method: 'GET' }, 'http://localhost:3000/api/battle/arimals');
+        const answer = await apiFetch({ method:'GET' }, 'http://localhost:3000/api/battle/answer')
+
         
-        if (arimals?.arimalPlayer1?.arimal && arimals?.arimalPlayer2?.arimal) {
+        if (arimals?.arimalPlayer1?.arimal && arimals?.arimalPlayer2?.arimal && answer.turn == 1) {
           setWaitingModal(false);
           onNext();
         }
