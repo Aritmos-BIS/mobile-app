@@ -34,8 +34,10 @@ const ShowInstructions = ({ onNext }) => {
 
         
         if (arimals?.arimalPlayer1?.arimal && arimals?.arimalPlayer2?.arimal && answer.turn == 1) {
-          setWaitingModal(false);
-          onNext();
+          setTimeout(() => {
+            setWaitingModal(false);
+            onNext();
+          }, 4000)
         }
 
       }, 1500);
