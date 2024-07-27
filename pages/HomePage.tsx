@@ -32,17 +32,17 @@ const HomePage = ({ navigation }) => {
     }
 
     checkBattle()
-    
+
   }, [studentData])
-  
+
 
   const handleCheckBattle = async () => {
 
-    console.log({studentData})
+    console.log({ studentData })
 
     const response = await apiFetch({ method: 'GET' }, `http://localhost:3000/api/battle/activeBattle/${studentData?.id}`)
     setData(response)
-    
+
 
     if (response.activeBattle) {
       setActiveBattle(true)
@@ -50,12 +50,12 @@ const HomePage = ({ navigation }) => {
       setActiveBattle(false)
     }
 
-    setTimeout(async() => {await handleCheckBattle()}, 2000)
-    
+    setTimeout(async () => { await handleCheckBattle() }, 2000)
+
   }
-  
-  if(loading){
-    return <AppLoader/>
+
+  if (loading) {
+    return <AppLoader />
   }
 
   return (
@@ -78,14 +78,14 @@ const HomePage = ({ navigation }) => {
         ) : (
           <>
             <Text style={styles.title}>No hay batallas activas</Text>
-            <Text style={styles.buttonText}>Presiona el botón para buscar batallas</Text>
+            <Text style={styles.buttonText}>Espera a que tu profesor inicie la batalla</Text>
             {/* <TouchableOpacity
               style={styles.buttonStyle}
               onPress={() => handleCheckBattle()}>
               <Text style={styles.buttonText}>Buscar</Text>
             </TouchableOpacity> */}
           </>
-          
+
         )}
       </View>
     </View>

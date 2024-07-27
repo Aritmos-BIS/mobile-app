@@ -116,8 +116,8 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
 
 
   const handleCheckWinner = async () => {
-    const response = await apiFetch({method: 'GET'}, 'http://localhost:3000/api/battle/winner')
-    if(response?.winnerId){
+    const response = await apiFetch({ method: 'GET' }, 'http://localhost:3000/api/battle/winner')
+    if (response?.winnerId) {
       setStatus(null)
       setResult(response.winnerId == data?.id ? 'winner' : 'loser')
     }
@@ -128,7 +128,7 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
 
     const checkTurns = async () => {
       const _data = await apiFetch({ method: 'GET' }, 'http://localhost:3000/api/battle/answer');
-   
+
       if (_data.answerPlayer1.turn === _data.answerPlayer2.turn) {
         setStatus(isCorrect ? 'correct' : 'incorrect')
         setTimeout(() => {
@@ -143,18 +143,18 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
     checkTurns();
   };
 
-  if(status != null){
-    return(
-    <Modal>
-      <StatusPage status={status}/>
-    </Modal>
+  if (status != null) {
+    return (
+      <Modal>
+        <StatusPage status={status} />
+      </Modal>
     )
   }
 
-  if(result != null){
-    return(
+  if (result != null) {
+    return (
       <Modal>
-        <ResultPage result={result}/>
+        <ResultPage result={result} />
       </Modal>
     )
   }
@@ -185,9 +185,6 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
           <Text style={styles.buttonText}>Enviar Respuesta</Text>
         </TouchableOpacity>
       </View>
-      {submittedAnswer !== null && (
-        <Text style={styles.submittedText}>Respuesta enviada: {submittedAnswer}</Text>
-      )}
     </View>
   );
 };
