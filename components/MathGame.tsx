@@ -117,9 +117,14 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
 
   const handleCheckWinner = async () => {
     const response = await apiFetch({method: 'GET'}, 'http://localhost:3000/api/battle/winner')
+    console.log({response})
     if(response?.winnerId){
       setStatus(null)
       setResult(response.winnerId == data?.id ? 'winner' : 'loser')
+    }else{
+      setTimeout(async () => {
+        await handleCheckWinner()
+      }, 2000);
     }
   }
 
@@ -127,8 +132,8 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
     setStatus('waiting');
 
     const checkTurns = async () => {
-      const _data = await apiFetch({ method: 'GET' }, 'http://localhost:3000/api/battle/answer');
-   
+      const _data = await apiFetch({ method: 'GET' }, 'http://localhost:3000/api/battle/answer')
+
       if (_data.answerPlayer1.turn === _data.answerPlayer2.turn) {
         setStatus(isCorrect ? 'correct' : 'incorrect')
         setTimeout(() => {
