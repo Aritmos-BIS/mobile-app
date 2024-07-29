@@ -84,8 +84,8 @@ const GamePage = () => {
         <>
           <Text style={[styles.labelDifficulty, getDifficultyStyle()]}>{difficulty == 'easy' ? 'Fácil' : difficulty == 'medium' ? 'Medio' : 'Difícil'}</Text>
 
-          <MathGame difficulty={difficulty} data={studentData}  onBack={handleBackToDifficultySelection} />
-        
+          <MathGame difficulty={difficulty} data={studentData} onBack={handleBackToDifficultySelection} />
+
         </>
       ) : (
         <>
@@ -94,14 +94,6 @@ const GamePage = () => {
           ) : (
             <View style={styles.mainContainer}>
               <View style={styles.imageContainer}>
-                <Image
-                  source={require('../assets/axo.png')}
-                  resizeMode="contain"
-                />
-                <Image
-                  source={require('../assets/axo.png')}
-                  resizeMode="contain"
-                />
               </View>
               {/* Modal de espera */}
               <Modal
