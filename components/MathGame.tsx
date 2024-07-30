@@ -95,7 +95,7 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
         console.log({ payload });
 
         try {
-          const response = await fetch('http://localhost:3000/api/battle/answer', {
+          const response = await fetch(`${process.env.EXPO_PUBLIC_API_URL}/api/battle/answer`, {
             method: 'PUT',
             headers: {
               'Content-Type': 'application/json',
@@ -116,7 +116,7 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
 
 
   const handleCheckWinner = async () => {
-    const response = await apiFetch({ method: 'GET' }, 'http://localhost:3000/api/battle/winner')
+    const response = await apiFetch({ method: 'GET' }, '/api/battle/winner')
     if (response?.winnerId) {
       setStatus(null)
       setResult(response.winnerId == data?.id ? 'winner' : 'loser')
@@ -131,7 +131,7 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
     setStatus('waiting');
 
     const checkTurns = async () => {
-      const _data = await apiFetch({ method: 'GET' }, 'http://localhost:3000/api/battle/answer')
+      const _data = await apiFetch({ method: 'GET' }, '/api/battle/answer')
 
       if (_data.answerPlayer1.turn === _data.answerPlayer2.turn) {
         setStatus(isCorrect ? 'correct' : 'incorrect')

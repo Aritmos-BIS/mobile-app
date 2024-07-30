@@ -1,13 +1,10 @@
 export const apiFetch = async ({ payload, method }, url) => {
-  const URL = url;
-  const token = localStorage.getItem('token');
-
+  const URL = process.env.EXPO_PUBLIC_API_URL + url;
   try {
     const options = {
       method,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: `Bearer ${token}`,
       },
     };
 

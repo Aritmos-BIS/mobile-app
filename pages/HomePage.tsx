@@ -40,17 +40,18 @@ const HomePage = ({ navigation }) => {
 
     console.log({ studentData })
 
-    const response = await apiFetch({ method: 'GET' }, `http://localhost:3000/api/battle/activeBattle/${studentData?.id}`)
+    const response = await apiFetch({ method: 'GET' }, `/api/battle/activeBattle/${studentData?.id}`)
     setData(response)
+    console.log({response}, 'partida')
 
 
-    if (response.activeBattle) {
+    if (response?.activeBattle) {
       setActiveBattle(true)
     } else {
       setActiveBattle(false)
     }
 
-    setTimeout(async () => { await handleCheckBattle() }, 2000)
+    setTimeout(async () => { await handleCheckBattle() }, 3000)
 
   }
 
