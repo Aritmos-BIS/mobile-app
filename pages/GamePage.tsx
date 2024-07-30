@@ -7,14 +7,12 @@ import ShowInstructions from '../components/ShowInstructions';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import { Student } from '../types/user.type';
 
-// Componente principal GamePage
 const GamePage = () => {
   const [showInstruction, setShowInstruction] = useState(true);
   const [modalVisible, setModalVisible] = useState(false);
   const [difficulty, setDifficulty] = useState(null);
   const [studentData, setStudentData] = useState<Student | undefined>(undefined);
 
-  // Hook para bloquear la orientación de la pantalla en landscape al entrar en la vista
   useFocusEffect(
     React.useCallback(() => {
       const lockOrientation = async () => {
@@ -45,19 +43,16 @@ const GamePage = () => {
     loadStudentData();
   }, []);
 
-  // Funcion para cambiar de coloca tu carta a seleccion de dificultad
   const handleNext = () => {
     setShowInstruction(false);
     setModalVisible(true);
   };
 
-  // Función para manejar la selección de la dificultad
   const handleDifficulty = (selectedDifficulty) => {
     setModalVisible(false);
     setDifficulty(selectedDifficulty);
   };
 
-  // Función para volver a la selección de dificultad
   const handleBackToDifficultySelection = () => {
     setDifficulty(null);
     setModalVisible(true);

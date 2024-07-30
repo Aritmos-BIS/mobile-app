@@ -20,7 +20,6 @@ import { Cloudinary } from "@cloudinary/url-gen";
 import { UploadApiOptions, upload } from "cloudinary-react-native";
 import * as Crypto from "expo-crypto";
 import React from "react";
-import useCameraUpload from "../hooks/useCameraUpload"
 import { patchProfile } from "../services/profileService";
 
 export default function CameraPage({navigation}) {

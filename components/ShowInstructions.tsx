@@ -74,7 +74,6 @@ const ShowInstructions = ({ onNext }) => {
         <Text style={styles.buttonText}>Next</Text>
       </TouchableOpacity>
 
-      {/* Modal de espera */}
       <Modal
         animationType="slide"
         transparent={true}

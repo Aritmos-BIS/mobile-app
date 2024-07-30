@@ -1,23 +1,25 @@
 import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet, TouchableOpacity } from 'react-native';
-import { useNavigation } from '@react-navigation/native';
-import TournamentPage from './TournamentPage';
 import { apiFetch } from '../libs/request';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import AppLoader from './AppLoader';
 import { Student } from '../types/user.type';
+import useAuth from '../hooks/useAuth';
 
 const HomePage = ({ navigation }) => {
   const [activeBattle, setActiveBattle] = useState(false)
   const [loading, setLoading] = useState(false)
   const [studentData, setStudentData] = useState<Student | undefined>(undefined);
   const [data, setData] = useState({})
+  const { logout } = useAuth();
 
   useEffect(() => {
     const loadStudentData = async () => {
       const _data = await AsyncStorage.getItem('@user');
       if (_data) {
         setStudentData(JSON.parse(_data));
+      }else{
+        logout()
       }
     };
 
@@ -42,7 +44,7 @@ const HomePage = ({ navigation }) => {
 
     const response = await apiFetch({ method: 'GET' }, `/api/battle/activeBattle/${studentData?.id}`)
     setData(response)
-    console.log({response}, 'partida')
+    console.log({response}, 'partida', process.env.EXPO_PUBLIC_API_URL)
 
 
     if (response?.activeBattle) {
@@ -80,11 +82,6 @@ const HomePage = ({ navigation }) => {
           <>
             <Text style={styles.title}>No hay batallas activas</Text>
             <Text style={styles.buttonText}>Espera a que tu profesor inicie la batalla</Text>
-            {/* <TouchableOpacity
-              style={styles.buttonStyle}
-              onPress={() => handleCheckBattle()}>
-              <Text style={styles.buttonText}>Buscar</Text>
-            </TouchableOpacity> */}
           </>
 
         )}

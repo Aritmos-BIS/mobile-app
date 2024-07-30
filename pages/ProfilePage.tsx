@@ -221,7 +221,7 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'center',
     alignItems: 'center',
-    backgroundColor: '#10002bCC',  // Transparente del color de fondo principal
+    backgroundColor: '#10002bCC',
   },
   modalContent: {
     width: '80%',

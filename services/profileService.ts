@@ -49,7 +49,7 @@ async function patchProfile(body:object) {
 
 
         const response = await fetch('https://aritmos-salvador511s-projects.vercel.app/api/students', {
-            method: 'PUT', // change this to the current endpoint for update the profile
+            method: 'PUT',
             headers: {
                 Authorization: `Bearer ${token}`,
                 'Content-Type': 'application/json',
