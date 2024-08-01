@@ -5,9 +5,10 @@ import { useFocusEffect } from '@react-navigation/native';
 
 interface StatusProps {
   status: 'correct' | 'incorrect' | 'waiting' | null;
+  correctAnswer?: number;
 }
 
-const StatusPage: React.FC<StatusProps> = ({ status }) => {
+const StatusPage: React.FC<StatusProps> = ({ status, correctAnswer }) => {
   useFocusEffect(
     React.useCallback(() => {
       const lockOrientation = async () => {
@@ -43,6 +44,7 @@ const StatusPage: React.FC<StatusProps> = ({ status }) => {
         return (
           <View style={styles.incorrect}>
             <Text style={styles.label}>Respuesta Incorrecta</Text>
+            <Text style={styles.correctAnswerLabel}>El resultado correcto era: {correctAnswer}</Text>
             <Image
               source={require('../assets/wrong.gif')}
               style={styles.imageStyle}
@@ -123,6 +125,12 @@ const styles = StyleSheet.create({
     color: '#fff',
     fontWeight: 'bold',
     marginBottom: 20,
+  },
+  correctAnswerLabel: {
+    fontSize: 18,
+    textAlign: 'center',
+    color: '#fff',
+    marginTop: 10,
   },
 });
 

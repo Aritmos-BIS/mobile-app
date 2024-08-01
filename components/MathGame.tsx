@@ -41,6 +41,7 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
   const [isCorrect, setIsCorrect] = useState<boolean>(false);
   const [status, setStatus] = useState<Status>(null);
   const [result, setResult] = useState<Result>(null)
+  const [correctAnswer, setCorrectAnswer] = useState<number | undefined>(undefined);
 
   useEffect(() => {
     const loadNumbers = async () => {
@@ -70,6 +71,7 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
 
   const handleAnswerSubmit = async () => {
     const sum = calculateSum(numbers);
+    setCorrectAnswer(sum);
     const _result = sum === parseInt(answer);
     setIsCorrect(_result);
     setSubmittedAnswer(answer);
@@ -149,10 +151,10 @@ const MathGame = ({ difficulty, data, onBack }: { difficulty: Difficulty, data: 
 
   if (status != null) {
     return (
-      <Modal>
-        <StatusPage status={status} />
-      </Modal>
-    )
+        <Modal>
+            <StatusPage status={status} correctAnswer={correctAnswer} />
+        </Modal>
+    );
   }
 
   if (result != null) {
